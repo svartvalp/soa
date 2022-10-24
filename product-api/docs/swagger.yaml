@@ -1,0 +1,53 @@
+basePath: /api/v1
+definitions:
+  models.Product:
+    properties:
+      brand:
+        type: string
+      categoryID:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+    type: object
+host: localhost:7001
+info:
+  contact: {}
+  title: Product API
+  version: "1.0"
+paths:
+  /product:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: id
+          schema:
+            type: integer
+  /product/list:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Product'
+            type: array
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
