@@ -1,10 +1,78 @@
 basePath: /api/v1
 definitions:
+  dto.CreateCategoryReq:
+    properties:
+      description:
+        type: string
+      level:
+        type: integer
+      name:
+        type: string
+      parent_id:
+        type: integer
+    type: object
+  dto.CreateCharacteristicReq:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      parent_id:
+        type: string
+    type: object
+  dto.CreateProductReq:
+    properties:
+      brand:
+        type: string
+      category_id:
+        type: integer
+      description:
+        type: string
+      image:
+        $ref: '#/definitions/dto.Image'
+      name:
+        type: string
+      price:
+        type: integer
+    type: object
+  dto.Image:
+    properties:
+      body:
+        items:
+          type: integer
+        type: array
+      name:
+        type: string
+    type: object
+  models.Category:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      level:
+        type: integer
+      name:
+        type: string
+      parentID:
+        type: integer
+    type: object
+  models.Characteristic:
+    properties:
+      chType:
+        type: string
+      descriptions:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   models.Product:
     properties:
       brand:
         type: string
-      categoryID:
+      category_id:
         type: integer
       description:
         type: string
@@ -17,24 +85,59 @@ definitions:
       price:
         type: integer
     type: object
+  models.ProductFilters:
+    properties:
+      category_ids:
+        items:
+          type: integer
+        type: array
+      characteristic_ids:
+        items:
+          type: integer
+        type: array
+      names:
+        items:
+          type: string
+        type: array
+    type: object
 host: localhost:7001
 info:
   contact: {}
   title: Product API
   version: "1.0"
 paths:
-  /product:
-    post:
+  /category/{id}/delete:
+    delete:
       consumes:
       - application/json
+      parameters:
+      - description: Delete category by id
+        in: query
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: id
-          schema:
-            type: integer
-  /product/list:
+          description: OK
+  /category/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create category
+        in: body
+        name: products
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCategoryReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+  /category/list:
     get:
       consumes:
       - application/json
@@ -45,9 +148,164 @@ paths:
           description: OK
           schema:
             items:
+              $ref: '#/definitions/models.Category'
+            type: array
+  /category/update:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update category by id
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+  /characteristic/{id}/delete:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Delete characteristic by id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+  /characteristic/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create characteristic
+        in: body
+        name: products
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCharacteristicReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+  /characteristic/list:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Characteristic'
+            type: array
+  /characteristic/update:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update characteristic by id
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Characteristic'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+  /product/{id}/delete:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Delete product by id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+  /product/add:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Product image
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+  /product/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create product list
+        in: body
+        name: products
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateProductReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+  /product/list:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: List product filters
+        in: body
+        name: filter
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductFilters'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
               $ref: '#/definitions/models.Product'
             type: array
-securityDefinitions:
-  BasicAuth:
-    type: basic
+  /product/update:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update product by id
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
 swagger: "2.0"

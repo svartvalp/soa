@@ -4,7 +4,7 @@ create table if not exists product
 (
     id          bigserial primary key,
     name        text,
-    descripton  text,
+    description  text,
     category_id bigint references category (id),
     brand       text,
     price       bigint,

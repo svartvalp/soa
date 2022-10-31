@@ -3,11 +3,17 @@ package models
 const ProductTableName = "product"
 
 type Product struct {
-	ID          int64  `db:"id"`
-	CategoryID  int64  `db:"category_id"`
-	Price       int64  `db:"price"`
-	Name        string `db:"name"`
-	Description string `db:"description"`
-	Brand       string `db:"brand"`
-	Image       string `db:"image"`
+	ID          int64  `db:"id" json:"id,omitempty"`
+	CategoryID  int64  `db:"category_id" json:"category_id,omitempty"`
+	Price       int64  `db:"price" json:"price,omitempty"`
+	Name        string `db:"name" json:"name,omitempty"`
+	Description string `db:"description" json:"description,omitempty"`
+	Brand       string `db:"brand" json:"brand,omitempty"`
+	Image       string `db:"image" json:"image,omitempty"`
+}
+
+type ProductFilters struct {
+	Names                    []string `json:"names,omitempty"`
+	CategoryIDs              []int64  `json:"category_ids,omitempty"`
+	ProductCharacteristicIDs []int64  `json:"characteristic_ids,omitempty"`
 }

@@ -7,5 +7,5 @@ type Category struct {
 	Name        string `db:"name"`
 	Description string `db:"description"`
 	ParentID    int64  `db:"parent_id"`
-	Level       string `db:"level"`
+	Level       int64  `db:"level"`
 }

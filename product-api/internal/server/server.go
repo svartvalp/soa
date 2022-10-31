@@ -30,6 +30,11 @@ func NewServer(
 	return srv
 }
 
+// @title   Product API
+// @version 1.0
+
+// @host     localhost:7001
+// @BasePath /api/v1
 func (s *server) setHandlers() {
 	v1 := s.gin.Group("/api/v1")
 	{

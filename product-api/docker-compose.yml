@@ -8,3 +8,11 @@ services:
       POSTGRES_PASSWORD: qwerty
     ports:
       - 5432:5432
+  ninja:
+    container_name: s3-ninja
+    image: scireum/s3-ninja:8.1.0
+    restart: always
+    ports:
+      - 9444:9000
+    tmpfs:
+      - "/home/sirius/data/product-api-bucket/:uid=2000,gid=2000"

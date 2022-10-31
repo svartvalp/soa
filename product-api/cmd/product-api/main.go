@@ -8,12 +8,13 @@ import (
 	"github.com/soa/product-api/internal/controllers/characteristic"
 	"github.com/soa/product-api/internal/controllers/product"
 	"github.com/soa/product-api/internal/db"
-	category_repo "github.com/soa/product-api/internal/db/category-repo"
-	characteristic_repo "github.com/soa/product-api/internal/db/characteristic-repo"
-	product_repo "github.com/soa/product-api/internal/db/product-repo"
+	category_repo "github.com/soa/product-api/internal/db/category"
+	characteristic_repo "github.com/soa/product-api/internal/db/characteristic"
+	product_repo "github.com/soa/product-api/internal/db/product"
 	category_service "github.com/soa/product-api/internal/pkg/category-service"
 	characteristic_service "github.com/soa/product-api/internal/pkg/characteristic-service"
 	product_service "github.com/soa/product-api/internal/pkg/product-service"
+	"github.com/soa/product-api/internal/s3"
 	"github.com/soa/product-api/internal/server"
 )
 
@@ -26,15 +27,22 @@ func main() {
 		return
 	}
 
-	conn, err := db.NewPGConnection(ctx, cfg)
+	conn, err := db.NewWrapper(ctx, cfg)
+	if err != nil {
+		return
+	}
+	s3Client, err := s3.NewS3(cfg)
+	if err != nil {
+		return
+	}
 
-	// Repository
+	// repository
 	productRepository := product_repo.NewRepository(conn)
 	categoryRepository := category_repo.NewRepository(conn)
 	characteristicRepository := characteristic_repo.NewRepository(conn)
 
 	// Services
-	productService := product_service.NewService(productRepository)
+	productService := product_service.NewService(productRepository, s3Client)
 	categoryService := category_service.NewService(categoryRepository)
 	characteristicService := characteristic_service.NewService(characteristicRepository)
 
