@@ -2,6 +2,7 @@ package characteristic
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v4"
@@ -32,6 +33,33 @@ func (r *Repository) List(ctx context.Context) ([]*models.Characteristic, error)
 	}
 	return res, nil
 }
+func (r *Repository) ProductCharacteristicList(ctx context.Context) ([]*models.ProductCharacteristic, error) {
+	qb := db.PgQb().
+		Select(
+			"ch.name",
+			"ch.id",
+			"ch.ch_type",
+			"ch.description",
+			"pch.product_id",
+		).
+		From(fmt.Sprintf("%s as ch", models.CharacteristicTableName)).
+		LeftJoin(
+			fmt.Sprintf(
+				"%s pch on pch.characteristic_id = ch.id",
+				models.ProductCharacteristicTableName,
+			),
+		)
+
+	var res []*models.ProductCharacteristic
+	err := r.Selectx(ctx, &res, qb)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return res, nil
+}
 
 func (r *Repository) Create(ctx context.Context, in *models.Characteristic) (int64, error) {
 	qb := db.PgQb().Insert(models.CharacteristicTableName).
@@ -43,7 +71,7 @@ func (r *Repository) Create(ctx context.Context, in *models.Characteristic) (int
 		Values(
 			in.Name,
 			in.ChType,
-			in.Descriptions,
+			in.Description,
 		).Suffix("RETURNING id")
 	id, err := r.Execx(ctx, qb)
 	if err != nil {
@@ -58,7 +86,7 @@ func (r *Repository) Update(ctx context.Context, in *models.Characteristic) erro
 		SetMap(map[string]interface{}{
 			"name":        in.Name,
 			"ch_type":     in.ChType,
-			"description": in.Descriptions,
+			"description": in.Description,
 		}).Where(squirrel.Eq{"id": in.ID}).
 		Suffix("RETURNING id")
 

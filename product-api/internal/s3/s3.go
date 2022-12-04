@@ -3,6 +3,7 @@ package s3
 import (
 	"bytes"
 	"context"
+	"io"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	s3Cfg "github.com/aws/aws-sdk-go-v2/config"
@@ -60,15 +61,15 @@ func (s *S3Client) PutImage(ctx context.Context, img []byte, filename string) er
 	return err
 }
 
-func (s *S3Client) GetImage(ctx context.Context, path string) ([]byte, error) {
-	// res, err := s.api.GetObjectWithContext(ctx, &s3.GetObjectInput{
-	// 	Path: &path,
-	// })
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// defer res.Body.Close()
-	//
-	// return io.ReadAll(res.Body)
-	panic(nil)
+func (s *S3Client) GetImage(ctx context.Context, filename string) ([]byte, error) {
+	res, err := s.api.GetObject(ctx, &s3.GetObjectInput{
+		Bucket: aws.String(s.bucket),
+		Key:    aws.String(filename),
+	})
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	return io.ReadAll(res.Body)
 }

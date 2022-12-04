@@ -12,12 +12,12 @@ import (
 type server struct {
 	gin         *gin.Engine
 	address     string
-	controllers []Controller
+	controllers []controller
 }
 
 func NewServer(
 	cfg *config.Config,
-	controllers ...Controller,
+	controllers ...controller,
 ) Server {
 	srv := &server{
 		gin:         gin.Default(),
@@ -33,7 +33,7 @@ func NewServer(
 // @title   Product API
 // @version 1.0
 
-// @host     localhost:7001
+// @host     localhost:7002
 // @BasePath /api/v1
 func (s *server) setHandlers() {
 	v1 := s.gin.Group("/api/v1")

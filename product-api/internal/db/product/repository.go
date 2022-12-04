@@ -23,9 +23,6 @@ func NewRepository(wp db.Wrapper) *Repository {
 func (r *Repository) List(ctx context.Context, req *models.ProductFilters) ([]*models.Product, error) {
 	qb := applyFilter(req)
 	var res []*models.Product
-	st, a, _ := qb.ToSql()
-	print(st)
-	print(a)
 	err := r.Selectx(ctx, &res, qb)
 	if err != nil {
 		if err == pgx.ErrNoRows {
@@ -60,6 +57,7 @@ func applyFilter(req *models.ProductFilters) squirrel.SelectBuilder {
 			qb = qb.Where(squirrel.Eq{"pc.id": req.ProductCharacteristicIDs})
 		}
 	}
+	qb = qb.OrderBy("id")
 	return qb
 }
 
@@ -99,6 +97,20 @@ func (r *Repository) Update(ctx context.Context, in *models.Product) error {
 			"brand":       in.Brand,
 			"image":       in.Image,
 		}).Where(squirrel.Eq{"id": in.ID}).Suffix("RETURNING id")
+
+	_, err := r.Execx(ctx, qb)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+func (r *Repository) SetImage(ctx context.Context, img string, id int64) error {
+	qb := db.PgQb().
+		Update(models.ProductTableName).
+		Set(
+			"image", img,
+		).Where(squirrel.Eq{"id": id}).Suffix("RETURNING id")
 
 	_, err := r.Execx(ctx, qb)
 	if err != nil {

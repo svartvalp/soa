@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 
 	"github.com/soa/product-api/internal/config"
 	"github.com/soa/product-api/internal/controllers/category"
@@ -11,6 +12,7 @@ import (
 	category_repo "github.com/soa/product-api/internal/db/category"
 	characteristic_repo "github.com/soa/product-api/internal/db/characteristic"
 	product_repo "github.com/soa/product-api/internal/db/product"
+	"github.com/soa/product-api/internal/kafka"
 	category_service "github.com/soa/product-api/internal/pkg/category-service"
 	characteristic_service "github.com/soa/product-api/internal/pkg/characteristic-service"
 	product_service "github.com/soa/product-api/internal/pkg/product-service"
@@ -24,17 +26,20 @@ func main() {
 	// Config
 	cfg, err := config.NewConfig("internal/config/config.yml")
 	if err != nil {
-		return
+		log.Fatal(err)
 	}
 
 	conn, err := db.NewWrapper(ctx, cfg)
 	if err != nil {
-		return
+		log.Fatal(err)
 	}
 	s3Client, err := s3.NewS3(cfg)
 	if err != nil {
-		return
+		log.Fatal(err)
 	}
+
+	// Kafka
+	producer := kafka.NewProducer(cfg)
 
 	// repository
 	productRepository := product_repo.NewRepository(conn)
@@ -42,15 +47,16 @@ func main() {
 	characteristicRepository := characteristic_repo.NewRepository(conn)
 
 	// Services
-	productService := product_service.NewService(productRepository, s3Client)
-	categoryService := category_service.NewService(categoryRepository)
-	characteristicService := characteristic_service.NewService(characteristicRepository)
+	categoryService := category_service.NewService(categoryRepository, producer)
+	characteristicService := characteristic_service.NewService(characteristicRepository, producer)
+	productService := product_service.NewService(productRepository, s3Client, producer, categoryService, characteristicService)
 
 	// Controllers
 	productController := product.NewController(productService)
 	categoryController := category.NewController(categoryService)
 	characteristicController := characteristic.NewController(characteristicService)
 
+	// Run server
 	srv := server.NewServer(
 		cfg,
 		productController,
@@ -59,6 +65,6 @@ func main() {
 	)
 
 	if err = srv.Run(); err != nil {
-		return
+		log.Fatal(err)
 	}
 }

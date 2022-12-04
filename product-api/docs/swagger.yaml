@@ -46,10 +46,10 @@ definitions:
     type: object
   models.Category:
     properties:
+      ID:
+        type: integer
       description:
         type: string
-      id:
-        type: integer
       level:
         type: integer
       name:
@@ -59,14 +59,39 @@ definitions:
     type: object
   models.Characteristic:
     properties:
+      ID:
+        type: integer
       chType:
         type: string
-      descriptions:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  models.FullProductInfo:
+    properties:
+      brand:
+        type: string
+      category_id:
+        type: integer
+      categorys:
+        items:
+          $ref: '#/definitions/models.Category'
+        type: array
+      characteristics:
+        items:
+          $ref: '#/definitions/models.ProductCharacteristic'
+        type: array
+      description:
         type: string
       id:
         type: integer
+      image:
+        type: string
       name:
         type: string
+      price:
+        type: integer
     type: object
   models.Product:
     properties:
@@ -85,6 +110,19 @@ definitions:
       price:
         type: integer
     type: object
+  models.ProductCharacteristic:
+    properties:
+      ID:
+        type: integer
+      chType:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      productId:
+        type: integer
+    type: object
   models.ProductFilters:
     properties:
       category_ids:
@@ -100,7 +138,7 @@ definitions:
           type: string
         type: array
     type: object
-host: localhost:7001
+host: localhost:7002
 info:
   contact: {}
   title: Product API
@@ -226,6 +264,26 @@ paths:
       responses:
         "200":
           description: OK
+  /product/{id}/add:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Product image
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: Set product image by id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
   /product/{id}/delete:
     delete:
       consumes:
@@ -236,21 +294,6 @@ paths:
         name: id
         required: true
         type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-  /product/add:
-    post:
-      consumes:
-      - multipart/form-data
-      parameters:
-      - description: Product image
-        in: formData
-        name: file
-        required: true
-        type: file
       produces:
       - application/json
       responses:
@@ -272,6 +315,19 @@ paths:
       responses:
         "200":
           description: OK
+  /product/full-info:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.FullProductInfo'
+            type: array
   /product/list:
     post:
       consumes:

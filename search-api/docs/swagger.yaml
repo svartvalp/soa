@@ -1,0 +1,100 @@
+basePath: /api/v1
+definitions:
+  models.Category:
+    properties:
+      ID:
+        type: integer
+      description:
+        type: string
+      level:
+        type: integer
+      name:
+        type: string
+      parentID:
+        type: integer
+    type: object
+  models.Filter:
+    type: object
+  models.ProductCharacteristic:
+    properties:
+      ID:
+        type: integer
+      chType:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      productId:
+        type: integer
+    type: object
+  models.ProductInfo:
+    properties:
+      brand:
+        type: string
+      category_id:
+        type: integer
+      categorys:
+        items:
+          $ref: '#/definitions/models.Category'
+        type: array
+      characteristics:
+        items:
+          $ref: '#/definitions/models.ProductCharacteristic'
+        type: array
+      description:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+    type: object
+host: localhost:7001
+info:
+  contact: {}
+  title: Product API
+  version: "1.0"
+paths:
+  /product/list:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: List product filters
+        in: body
+        name: filter
+        required: true
+        schema:
+          $ref: '#/definitions/models.Filter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ProductInfo'
+            type: array
+  /product/update:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update products
+        in: body
+        name: products
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/models.ProductInfo'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+swagger: "2.0"

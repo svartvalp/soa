@@ -210,30 +210,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/product/add": {
-            "post": {
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "type": "file",
-                        "description": "Product image",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
         "/product/create": {
             "post": {
                 "consumes": [
@@ -256,6 +232,27 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    }
+                }
+            }
+        },
+        "/product/full-info": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.FullProductInfo"
+                            }
+                        }
                     }
                 }
             }
@@ -309,6 +306,37 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.Product"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/product/{id}/add": {
+            "post": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Product image",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Set product image by id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -415,11 +443,11 @@ const docTemplate = `{
         "models.Category": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "type": "integer"
+                },
                 "description": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "level": {
                     "type": "integer"
@@ -435,17 +463,55 @@ const docTemplate = `{
         "models.Characteristic": {
             "type": "object",
             "properties": {
+                "ID": {
+                    "type": "integer"
+                },
                 "chType": {
                     "type": "string"
                 },
-                "descriptions": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.FullProductInfo": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "categorys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Category"
+                    }
+                },
+                "characteristics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProductCharacteristic"
+                    }
+                },
+                "description": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
+                "image": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 }
             }
         },
@@ -471,6 +537,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "price": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ProductCharacteristic": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "chType": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "productId": {
                     "type": "integer"
                 }
             }
@@ -504,7 +590,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:7001",
+	Host:             "localhost:7002",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "Product API",

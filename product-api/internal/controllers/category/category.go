@@ -18,7 +18,7 @@ func NewController(categoryService categoryService) *Controller {
 }
 
 func (c *Controller) SetV1Handlers(group *gin.RouterGroup) {
-	g := group.Group("/ategory")
+	g := group.Group("/category")
 	{
 		g.GET("/list", c.list)
 		g.POST("/create", c.create)

@@ -22,10 +22,11 @@ func (c *Controller) SetV1Handlers(group *gin.RouterGroup) {
 	g := group.Group("/product")
 	{
 		g.POST("/list", c.list)
+		g.GET("/full-info", c.getFullInfo)
 		g.POST("/create", c.create)
 		g.PUT("/update", c.update)
 		g.DELETE("/:id/delete", c.delete)
-		g.POST("/add", c.loadImage)
+		g.POST("/:id/add", c.loadImage)
 	}
 }
 
@@ -63,7 +64,7 @@ func (c *Controller) create(ctx *gin.Context) {
 	}
 	id, err := c.productService.Create(ctx, &product)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, err)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
 	}
 
 	ctx.JSON(http.StatusOK, id)
@@ -72,9 +73,10 @@ func (c *Controller) create(ctx *gin.Context) {
 // @Schemes
 // @Accept  multipart/form-data
 // @Param   file formData file true "Product image"
+// @Param   id query integer true "Set product image by id"
 // @Produce json
 // @Success 200
-// @Router  /product/add [post]
+// @Router  /product/{id}/add [post]
 func (c *Controller) loadImage(ctx *gin.Context) {
 	formFile, err := ctx.FormFile("file")
 	if err != nil {
@@ -86,7 +88,12 @@ func (c *Controller) loadImage(ctx *gin.Context) {
 	}
 	b, err := io.ReadAll(f)
 
-	err = c.productService.UI(ctx, &dto.Image{Body: b, Name: formFile.Filename})
+	id, err := strconv.Atoi(ctx.Query("id"))
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, err)
+	}
+
+	err = c.productService.UI(ctx, int64(id), &dto.Image{Body: b, Name: formFile.Filename})
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
 	}
@@ -96,7 +103,7 @@ func (c *Controller) loadImage(ctx *gin.Context) {
 // @Schemes
 // @Accept  json
 // @Param   product body models.Product true "Update product by id"
-// @Produce jsons
+// @Produce json
 // @Success 200
 // @Router  /product/update [put]
 func (c *Controller) update(ctx *gin.Context) {
@@ -108,7 +115,7 @@ func (c *Controller) update(ctx *gin.Context) {
 	}
 	err = c.productService.Update(ctx, products)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, err)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
 	}
 	ctx.Status(http.StatusOK)
 }
@@ -127,7 +134,20 @@ func (c *Controller) delete(ctx *gin.Context) {
 
 	err = c.productService.Delete(ctx, int64(id))
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, err)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
 	}
 	ctx.Status(http.StatusOK)
+}
+
+// @Schemes
+// @Accept  json
+// @Produce json
+// @Success 200    {array} models.FullProductInfo
+// @Router  /product/full-info [get]
+func (c *Controller) getFullInfo(ctx *gin.Context) {
+	res, err := c.productService.GetFullProductInfo(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+	}
+	ctx.JSON(http.StatusOK, res)
 }

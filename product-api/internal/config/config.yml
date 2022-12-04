@@ -1,5 +1,5 @@
 server:
-  address: ":7001"
+  address: ":7002"
 databaseDsn: "user=postgres dbname=product-api password=qwerty host=localhost port=5432 sslmode=disable"
 s3:
   bucket: "product-api-bucket"
@@ -7,3 +7,7 @@ s3:
   region: "us-west-2"
   accessKeyID: "AKIAIOSFODNN7EXAMPLE"
   secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+kafka:
+  address: "localhost:9092"
+  topic: "test"
+  partition: 0
