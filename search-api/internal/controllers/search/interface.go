@@ -8,7 +8,7 @@ import (
 
 type (
 	productService interface {
-		List(context.Context, *models.Filter) ([]models.ProductInfo, error)
+		List(context.Context, *models.Filter) ([]int64, error)
 		Regenerate(context.Context, []models.ProductInfo) error
 	}
 )

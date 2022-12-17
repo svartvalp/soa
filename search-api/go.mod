@@ -5,7 +5,9 @@ go 1.19
 require (
 	github.com/Masterminds/squirrel v1.5.3
 	github.com/blevesearch/bleve/v2 v2.3.5
+	github.com/blevesearch/bleve_index_api v1.0.4
 	github.com/gin-gonic/gin v1.8.1
+	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/jackc/pgx/v4 v4.1.2
 	github.com/randallmlough/pgxscan v0.3.0
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
@@ -20,7 +22,6 @@ require (
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/RoaringBitmap/roaring v0.9.4 // indirect
 	github.com/bits-and-blooms/bitset v1.2.0 // indirect
-	github.com/blevesearch/bleve_index_api v1.0.4 // indirect
 	github.com/blevesearch/geo v0.1.15 // indirect
 	github.com/blevesearch/go-porterstemmer v1.0.3 // indirect
 	github.com/blevesearch/gtreap v0.1.1 // indirect

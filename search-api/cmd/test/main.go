@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/blevesearch/bleve/v2"
+	query3 "github.com/blevesearch/bleve/v2/search/query"
 )
 
 func main() {
@@ -35,16 +36,20 @@ func main() {
 	})
 
 	// // search for some text
-	// a := 2.5
-	// b := 3.6
+	a := 2.0
+	b := 3.6
+	min := true
+	max := true
 	// d, _ := index.Fields()
 	// fmt.Printf("%+v", d)
-	query := New([]float64{555.0})
+	query := query3.NewNumericRangeInclusiveQuery(&a, &b, &min, &max)
+	query.SetField("b")
+	// query := query2.New([]float64{555.0})
 	search := bleve.NewSearchRequest(query)
 	search.Fields = []string{"a", "b", "arr"}
 	searchResults, err := index.Search(search)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%v", searchResults.Hits[0].Fields)
+	fmt.Printf("%v", searchResults.Hits.Len())
 }

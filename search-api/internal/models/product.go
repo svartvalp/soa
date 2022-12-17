@@ -9,6 +9,11 @@ import (
 const ProductTableName = "product"
 
 type Filter struct {
+	Query     string `json:"query,omitempty"`
+	CatID     int64  `json:"cat_id,omitempty"`
+	PriceFrom int64  `json:"price_from,omitempty"`
+	PriceTo   int64  `json:"price_to,omitempty"`
+	Brand     string `json:"brand,omitempty"`
 }
 
 type (
