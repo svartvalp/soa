@@ -2,6 +2,8 @@ package search_service
 
 import (
 	"context"
+	"encoding/json"
+	"io"
 	"os"
 	"strconv"
 	"time"
@@ -19,13 +21,27 @@ type Service struct {
 }
 
 func NewService() (*Service, error) {
-	old, err := bleve.Open("current")
+	meta, err := getMeta()
+	if err != nil {
+		return nil, err
+	}
+	index := meta.Index
+	if index == "" {
+		index = "current"
+	}
+	old, err := bleve.Open(index)
 	if err != nil {
 		if err == bleve.ErrorIndexPathDoesNotExist {
-			old, err = bleve.New("current", bleve.NewIndexMapping())
+			old, err = bleve.New(index, bleve.NewIndexMapping())
 			if err != nil {
 				return nil, err
 			}
+		}
+	}
+	if index != meta.Index {
+		err = setMeta(&dto.Meta{Index: index})
+		if err != nil {
+			return nil, err
 		}
 	}
 	id := strconv.FormatInt(time.Now().UnixNano(), 10)
@@ -36,6 +52,47 @@ func NewService() (*Service, error) {
 		old:  old,
 		new:  n,
 	}, nil
+}
+
+func getMeta() (*dto.Meta, error) {
+	f, err := os.Open("meta.json")
+	if err != nil {
+		m := dto.Meta{}
+		var dat []byte
+		dat, err = json.Marshal(&m)
+		if err != nil {
+			return nil, err
+		}
+		err = os.WriteFile("meta.json", dat, os.ModePerm)
+		if err != nil {
+			return nil, err
+		}
+		return &m, nil
+	}
+	dat, err := io.ReadAll(f)
+	if err != nil {
+		return nil, err
+	}
+	var m dto.Meta
+	err = json.Unmarshal(dat, &m)
+	if err != nil {
+		return nil, err
+	}
+	return &m, nil
+}
+
+func setMeta(m *dto.Meta) error {
+	var dat []byte
+	var err error
+	dat, err = json.Marshal(&m)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile("meta.json", dat, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *Service) List(ctx context.Context, req *models.Filter) ([]int64, error) {
@@ -104,23 +161,25 @@ func (s *Service) Regenerate(ctx context.Context, products []models.ProductInfo)
 			return err
 		}
 	}
-	return s.SwapIndex(ctx)
+	return nil
+	// return s.SwapIndex(ctx)
 }
 
 func (s *Service) SwapIndex(ctx context.Context) error {
 	var err error
 	s.main.Swap([]bleve.Index{s.new}, []bleve.Index{s.old})
 	s.old = s.new
+	indexName := s.old.Name()
+	err = setMeta(&dto.Meta{Index: indexName})
+	if err != nil {
+		return err
+	}
 	id := strconv.FormatInt(time.Now().UnixNano(), 10)
-	s.new, err = bleve.New(id, bleve.NewIndexMapping())
+	err = s.old.(bleve.IndexCopyable).CopyTo(bleve.FileSystemDirectory(id))
 	if err != nil {
 		return err
 	}
-	err = os.RemoveAll("current")
-	if err != nil {
-		return err
-	}
-	err = s.old.(bleve.IndexCopyable).CopyTo(bleve.FileSystemDirectory("current"))
+	s.new, err = bleve.Open(id)
 	if err != nil {
 		return err
 	}
