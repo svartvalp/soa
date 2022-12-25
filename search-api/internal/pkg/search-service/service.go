@@ -45,7 +45,11 @@ func NewService() (*Service, error) {
 		}
 	}
 	id := strconv.FormatInt(time.Now().UnixNano(), 10)
-	n, err := bleve.New(id, bleve.NewIndexMapping())
+	err = old.(bleve.IndexCopyable).CopyTo(bleve.FileSystemDirectory(id))
+	if err != nil {
+		return nil, err
+	}
+	n, err := bleve.Open(id)
 	alias := bleve.NewIndexAlias(old)
 	return &Service{
 		main: alias,
