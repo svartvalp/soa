@@ -97,7 +97,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.ProductInfo'
+              type: integer
             type: array
   /product/update:
     put:

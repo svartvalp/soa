@@ -19,8 +19,17 @@ func (s *Service) CategoryList(ctx context.Context) ([]models.Category, error) {
 	return s.productAPI.CategoriesList(ctx)
 }
 
-func (s *Service) ProductList(ctx context.Context, req *models.Filter) ([]models.ProductInfo, error) {
-	return s.searchAPI.ProductList(ctx, req)
+func (s *Service) GetProducts(ctx context.Context, req *models.Filter) ([]models.ProductInfo, error) {
+	ids, err := s.searchAPI.GetProductIDs(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ids) == 0 {
+		return nil, nil
+	}
+
+	return s.productAPI.GetProductsInfo(ctx, ids)
 }
 
 func New(productAPI productAPI, searchAPI searchAPI) *Service {

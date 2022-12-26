@@ -54,7 +54,7 @@ func (c *Controller) productList(ctx *gin.Context) {
 		return
 	}
 
-	products, err := c.catalogService.ProductList(ctx, &filter)
+	products, err := c.catalogService.GetProducts(ctx, &filter)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
 		return

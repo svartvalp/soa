@@ -1,6 +1,14 @@
 package models
 
 type (
+	FullProductFilters struct {
+		IDs                      []int64  `json:"ids,omitempty"`
+		Names                    []string `json:"names,omitempty" json:"names,omitempty"`
+		CategoryIDs              []int64  `json:"category_ids,omitempty" json:"categoryIDs,omitempty"`
+		ProductCharacteristicIDs []int64  `json:"product_characteristic_ids,omitempty" json:"productCharacteristicIDs,omitempty"`
+		CharacteristicIDs        []int64  `json:"characteristic_ids,omitempty" json:"characteristicIDs,omitempty"`
+	}
+
 	Filter struct {
 		Query     string `json:"query,omitempty"`
 		CatID     int64  `json:"cat_id,omitempty"`

@@ -20,7 +20,7 @@ type SearchAPI struct {
 	address string
 }
 
-func (p *SearchAPI) ProductList(ctx context.Context, filter *models.Filter) ([]models.ProductInfo, error) {
+func (p *SearchAPI) GetProductIDs(ctx context.Context, filter *models.Filter) ([]int64, error) {
 	b, err := json.Marshal(filter)
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (p *SearchAPI) ProductList(ctx context.Context, filter *models.Filter) ([]m
 		return nil, err
 	}
 
-	return requester.UnmarshalBody[[]models.ProductInfo](resp)
+	return requester.UnmarshalBody[[]int64](resp)
 }
 
 func New(r requester.Requester, cfg *config.Config) *SearchAPI {

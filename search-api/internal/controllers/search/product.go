@@ -28,7 +28,7 @@ func (c *Controller) SetV1Handlers(group *gin.RouterGroup) {
 // @Accept  json
 // @Produce json
 // @Param   filter body    models.Filter true "List product filters"
-// @Success 200    {array} models.ProductInfo
+// @Success 200    {array} int
 // @Router  /product/list [post]
 func (c *Controller) list(ctx *gin.Context) {
 	var filter models.Filter

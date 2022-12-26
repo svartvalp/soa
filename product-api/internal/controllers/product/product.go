@@ -181,6 +181,7 @@ func (c *Controller) getFullInfo(ctx *gin.Context) {
 	res, err := c.productService.GetFullProductInfo(ctx, req)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
 	ctx.JSON(http.StatusOK, res)
 }
