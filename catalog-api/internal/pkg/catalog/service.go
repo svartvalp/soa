@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"context"
+	"log"
 
 	"github.com/soa/catalog-api/internal/models"
 )
@@ -22,6 +23,7 @@ func (s *Service) CategoryList(ctx context.Context) ([]models.Category, error) {
 func (s *Service) GetProducts(ctx context.Context, req *models.Filter) ([]models.ProductInfo, error) {
 	ids, err := s.searchAPI.GetProductIDs(ctx, req)
 	if err != nil {
+		log.Printf("GetProducts: %v", err)
 		return nil, err
 	}
 

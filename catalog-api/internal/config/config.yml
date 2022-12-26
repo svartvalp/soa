@@ -1,17 +1,6 @@
 server:
   address: ":7003"
-#databaseDsn: "user=postgres dbname=product-api password=qwerty host=localhost port=5432 sslmode=disable"
-#s3:
-#  bucket: "product-api-bucket"
-#  url: "http://localhost:9444"
-#  region: "us-west-2"
-#  accessKeyID: "AKIAIOSFODNN7EXAMPLE"
-#  secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-#kafka:
-#  address: "localhost:9092"
-#  topic: "test"
-#  partition: 0
 productAPI:
-  address: "http://localhost:7002/api/v1/"
+  address: "http://product-api:7002/api/v1/"
 searchAPI:
-  address: "http://localhost:7001/api/v1/"
+  address: "http://search-api:7001/api/v1/"

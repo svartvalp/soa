@@ -6,6 +6,9 @@ services:
     build: ./catalog-api
     ports:
       - 7003:7003
+    depends_on:
+      - product-api
+      - search-api
   indexer-api:
     container_name: indexer-api
     build: ./indexer-api
