@@ -27,7 +27,7 @@ func (c *Controller) SetV1Handlers(group *gin.RouterGroup) {
 // @Schemes
 // @Accept  json
 // @Produce json
-// @Param   filter body models.Filter true "List product filters"
+// @Param   filter body    models.Filter true "List product filters"
 // @Success 200    {array} models.ProductInfo
 // @Router  /product/list [post]
 func (c *Controller) list(ctx *gin.Context) {
@@ -39,14 +39,15 @@ func (c *Controller) list(ctx *gin.Context) {
 
 	ids, err := c.productService.List(ctx, &filter)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		return
 	}
 	ctx.JSON(http.StatusOK, ids)
 }
 
 // @Schemes
 // @Accept  json
-// @Param   products body  []models.ProductInfo true "Update products"
+// @Param   products body []models.ProductInfo true "Update products"
 // @Produce json
 // @Success 200
 // @Router  /product/update [put]

@@ -8,6 +8,12 @@ import (
 )
 
 type (
+	Msg struct {
+		Service string  `json:"service,omitempty"`
+		Type    string  `json:"type"`
+		IDs     []int64 `json:"ids,omitempty"`
+	}
+
 	Producer interface {
 		Write(ctx context.Context, msg []byte) error
 	}

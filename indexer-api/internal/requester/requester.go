@@ -3,7 +3,9 @@ package requester
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 )
 
@@ -28,4 +30,15 @@ func (r *Requester) DoRequest(ctx context.Context, address, method string, body 
 		return nil, errors.New("sds")
 	}
 	return resp, nil
+}
+
+func UnmarshalBody[StructType any](resp *http.Response) (StructType, error) {
+	defer resp.Body.Close()
+
+	var out StructType
+	body, err := io.ReadAll(resp.Body)
+
+	err = json.Unmarshal(body, &out)
+
+	return out, err
 }

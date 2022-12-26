@@ -30,9 +30,8 @@ func NewServer(
 	return srv
 }
 
-// @title   Product API
-// @version 1.0
-
+// @title    Search API
+// @version  1.0
 // @host     localhost:7001
 // @BasePath /api/v1
 func (s *server) setHandlers() {
@@ -43,7 +42,7 @@ func (s *server) setHandlers() {
 		}
 	}
 
-	s.gin.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	s.gin.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }
 
 func (s *server) Run() error {

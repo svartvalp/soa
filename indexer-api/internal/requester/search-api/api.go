@@ -1,4 +1,4 @@
-package search_service
+package search_api
 
 import (
 	"context"
@@ -9,25 +9,27 @@ import (
 	"github.com/soa/indexer-api/internal/models"
 )
 
+const (
+	productUpdateURL = "product/update"
+)
+
 type (
-	Service struct {
+	SearchAPI struct {
 		searchAPIAddress string
-		searchPath       string
 		requester        requester
 	}
 )
 
-func NewService(cfg *config.Config, req requester) *Service {
-	return &Service{
+func New(cfg *config.Config, req requester) *SearchAPI {
+	return &SearchAPI{
 		searchAPIAddress: cfg.SearchAPI.Address,
-		searchPath:       cfg.SearchAPI.Path,
 		requester:        req,
 	}
 }
 
-func (s *Service) SendNewInfo(ctx context.Context, info []models.ProductInfo) error {
+func (s *SearchAPI) SendNewInfo(ctx context.Context, info []models.ProductInfo) error {
 	body, err := json.Marshal(info)
-	_, err = s.requester.DoRequest(ctx, s.searchAPIAddress+s.searchPath, http.MethodPut, body)
+	_, err = s.requester.DoRequest(ctx, s.searchAPIAddress+productUpdateURL, http.MethodPut, body)
 	if err != nil {
 		return err
 	}

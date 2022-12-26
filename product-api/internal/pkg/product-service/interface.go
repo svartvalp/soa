@@ -9,6 +9,7 @@ import (
 type (
 	repository interface {
 		List(ctx context.Context, req *models.ProductFilters) ([]*models.Product, error)
+		BrandList(ctx context.Context) ([]string, error)
 		Create(ctx context.Context, product *models.Product) (int64, error)
 		Update(ctx context.Context, in *models.Product) error
 		Delete(ctx context.Context, id int64) error

@@ -48,7 +48,7 @@ func main() {
 
 	// Services
 	categoryService := category_service.NewService(categoryRepository, producer)
-	characteristicService := characteristic_service.NewService(characteristicRepository, producer)
+	characteristicService := characteristic_service.NewService(characteristicRepository, productRepository, producer)
 	productService := product_service.NewService(productRepository, s3Client, producer, categoryService, characteristicService)
 
 	// Controllers

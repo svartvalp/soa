@@ -13,9 +13,11 @@ type Product struct {
 }
 
 type ProductFilters struct {
-	Names                    []string `json:"names,omitempty"`
-	CategoryIDs              []int64  `json:"category_ids,omitempty"`
-	ProductCharacteristicIDs []int64  `json:"characteristic_ids,omitempty"`
+	IDs                      []int64  `json:"ids,omitempty"`
+	Names                    []string `json:"names,omitempty" json:"names,omitempty"`
+	CategoryIDs              []int64  `json:"category_ids,omitempty" json:"categoryIDs,omitempty"`
+	ProductCharacteristicIDs []int64  `json:"product_characteristic_ids,omitempty" json:"productCharacteristicIDs,omitempty"`
+	CharacteristicIDs        []int64  `json:"characteristic_ids,omitempty" json:"characteristicIDs,omitempty"`
 }
 
 type FullProductInfo struct {

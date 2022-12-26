@@ -1,4 +1,4 @@
-package search_service
+package search_api
 
 import (
 	"context"

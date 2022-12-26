@@ -2,6 +2,7 @@ package product_service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/soa/product-api/internal/controllers/dto"
@@ -27,9 +28,13 @@ func NewService(repo repository, s3 s3, producer kafka.Producer, categoryService
 	}
 }
 
-func (s *Service) GetFullProductInfo(ctx context.Context) ([]models.FullProductInfo, error) {
+func (s *Service) BrandList(ctx context.Context) ([]string, error) {
+	return s.repo.BrandList(ctx)
+}
+
+func (s *Service) GetFullProductInfo(ctx context.Context, req *models.ProductFilters) ([]models.FullProductInfo, error) {
 	res := make([]models.FullProductInfo, 0, 100)
-	products, err := s.List(ctx, nil)
+	products, err := s.List(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +93,19 @@ func (s *Service) Create(ctx context.Context, product *dto.CreateProductReq) (in
 	if err != nil {
 		return 0, err
 	}
-	err = s.kafka.Write(ctx, []byte("productAPI"))
+
+	msg := kafka.Msg{
+		Service: "productAPI",
+		Type:    "CREATE",
+		IDs:     []int64{id},
+	}
+
+	b, err := json.Marshal(msg)
+	if err != nil {
+		return 0, err
+	}
+
+	err = s.kafka.Write(ctx, b)
 	if err != nil {
 		return 0, err
 	}
@@ -107,7 +124,18 @@ func (s *Service) UI(ctx context.Context, id int64, img *dto.Image) error {
 		return err
 	}
 
-	err = s.kafka.Write(ctx, []byte("productAPI"))
+	msg := kafka.Msg{
+		Service: "productAPI",
+		Type:    "UPDATE",
+		IDs:     []int64{id},
+	}
+
+	b, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+
+	err = s.kafka.Write(ctx, b)
 	if err != nil {
 		return err
 	}
@@ -119,13 +147,24 @@ func imageName(name string, id int64) string {
 	return fmt.Sprintf("%d-%s", id, name)
 }
 
-func (s *Service) Update(ctx context.Context, products *models.Product) error {
-	err := s.repo.Update(ctx, products)
+func (s *Service) Update(ctx context.Context, product *models.Product) error {
+	err := s.repo.Update(ctx, product)
 	if err != nil {
 		return err
 	}
 
-	err = s.kafka.Write(ctx, []byte("productAPI"))
+	msg := kafka.Msg{
+		Service: "productAPI",
+		Type:    "UPDATE",
+		IDs:     []int64{product.ID},
+	}
+
+	b, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+
+	err = s.kafka.Write(ctx, b)
 	if err != nil {
 		return err
 	}
@@ -139,7 +178,18 @@ func (s *Service) Delete(ctx context.Context, id int64) error {
 		return err
 	}
 
-	err = s.kafka.Write(ctx, []byte("productAPI"))
+	msg := kafka.Msg{
+		Service: "productAPI",
+		Type:    "DELETE",
+		IDs:     []int64{id},
+	}
+
+	b, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+
+	err = s.kafka.Write(ctx, b)
 	if err != nil {
 		return err
 	}

@@ -210,6 +210,27 @@ const docTemplate = `{
                 }
             }
         },
+        "/product/brand/list": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/product/create": {
             "post": {
                 "consumes": [
@@ -576,10 +597,22 @@ const docTemplate = `{
                         "type": "integer"
                     }
                 },
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "names": {
                     "type": "array",
                     "items": {
                         "type": "string"
+                    }
+                },
+                "product_characteristic_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
                     }
                 }
             }

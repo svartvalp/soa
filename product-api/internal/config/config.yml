@@ -1,6 +1,6 @@
 server:
   address: ":7002"
-databaseDsn: "user=postgres dbname=product-api password=qwerty host=localhost port=5432 sslmode=disable"
+databaseDsn: "user=postgres dbname=product-api password=qwerty host=db port=5432 sslmode=disable"
 s3:
   bucket: "product-api-bucket"
   url: "http://localhost:9444"

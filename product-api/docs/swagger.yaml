@@ -133,9 +133,17 @@ definitions:
         items:
           type: integer
         type: array
+      ids:
+        items:
+          type: integer
+        type: array
       names:
         items:
           type: string
+        type: array
+      product_characteristic_ids:
+        items:
+          type: integer
         type: array
     type: object
 host: localhost:7002
@@ -299,6 +307,19 @@ paths:
       responses:
         "200":
           description: OK
+  /product/brand/list:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
   /product/create:
     post:
       consumes:

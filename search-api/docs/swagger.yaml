@@ -14,6 +14,17 @@ definitions:
         type: integer
     type: object
   models.Filter:
+    properties:
+      brand:
+        type: string
+      cat_id:
+        type: integer
+      price_from:
+        type: integer
+      price_to:
+        type: integer
+      query:
+        type: string
     type: object
   models.ProductCharacteristic:
     properties:
@@ -56,9 +67,18 @@ definitions:
 host: localhost:7001
 info:
   contact: {}
-  title: Product API
+  title: Search API
   version: "1.0"
 paths:
+  /product/index:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
   /product/list:
     post:
       consumes:

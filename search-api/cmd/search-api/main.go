@@ -10,21 +10,11 @@ import (
 )
 
 func main() {
-	// ctx := context.Background()
-
 	// Config
 	cfg, err := config.NewConfig("internal/config/config.yml")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// conn, err := db.NewWrapper(ctx, cfg)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// repository
-	// searchRepository := search_repo.NewRepository(conn)
 
 	// Services
 	searchService, err := search_service.NewService()

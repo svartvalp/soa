@@ -17,13 +17,13 @@ type Config struct {
 
 	ProductAPI struct {
 		Address string `yaml:"address"`
-		Path    string `yaml:"path"`
 	} `yaml:"productAPI"`
 
 	SearchAPI struct {
 		Address string `yaml:"address"`
-		Path    string `yaml:"path"`
 	} `yaml:"searchAPI"`
+
+	DatabaseDsn string `yaml:"databaseDsn"`
 }
 
 // NewConfig returns a new decoded Config struct

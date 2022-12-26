@@ -6,8 +6,6 @@ import (
 	"errors"
 )
 
-const ProductTableName = "product"
-
 type Filter struct {
 	Query     string `json:"query,omitempty"`
 	CatID     int64  `json:"cat_id,omitempty"`

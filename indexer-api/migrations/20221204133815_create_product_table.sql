@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 create table if not exists product
 (
-    id              bigserial primary key,
+    id              bigint primary key,
     category_id     bigint,
     price           bigint,
     name            text,

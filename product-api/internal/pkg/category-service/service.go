@@ -2,6 +2,7 @@ package category_service
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/soa/product-api/internal/controllers/dto"
 	"github.com/soa/product-api/internal/kafka"
@@ -9,8 +10,9 @@ import (
 )
 
 type Service struct {
-	repo  repository
-	kafka kafka.Producer
+	repo        repository
+	productRepo productRepository
+	kafka       kafka.Producer
 }
 
 func NewService(repo repository, kafka kafka.Producer) *Service {
@@ -48,23 +50,43 @@ func (s *Service) Create(ctx context.Context, in *dto.CreateCategoryReq) (int64,
 		return 0, err
 	}
 
-	err = s.kafka.Write(ctx, []byte("productAPI"))
-	if err != nil {
-		return 0, err
-	}
 	return id, nil
 }
 
-func (s *Service) Update(ctx context.Context, products *models.Category) error {
-	err := s.repo.Update(ctx, products)
+func (s *Service) Update(ctx context.Context, cats *models.Category) error {
+	err := s.repo.Update(ctx, cats)
 	if err != nil {
 		return err
 	}
 
-	err = s.kafka.Write(ctx, []byte("productAPI"))
+	products, err := s.productRepo.List(ctx, &models.ProductFilters{
+		CategoryIDs: []int64{cats.ID},
+	})
 	if err != nil {
 		return err
 	}
+
+	ids := make([]int64, 0, len(products))
+	for _, product := range products {
+		ids = append(ids, product.ID)
+	}
+
+	msg := kafka.Msg{
+		Service: "productAPI",
+		Type:    "UPDATE",
+		IDs:     ids,
+	}
+
+	b, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+
+	err = s.kafka.Write(ctx, b)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

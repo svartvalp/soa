@@ -3,8 +3,7 @@ kafka:
   topic: "test"
   partition: 0
 productAPI:
-  address: "http://localhost:7002"
-  path: "/api/v1/product/full-info"
+  address: "http://localhost:7002/api/v1/"
 searchAPI:
-  address: "http://localhost:7001"
-  path: "/api/v1/product/update"
+  address: "http://localhost:7001/api/v1/"
+databaseDsn: "user=postgres dbname=indexer-api password=qwerty host=db port=5432 sslmode=disable"

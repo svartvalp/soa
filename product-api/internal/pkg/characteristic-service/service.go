@@ -2,6 +2,7 @@ package characteristic_service
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/soa/product-api/internal/controllers/dto"
 	"github.com/soa/product-api/internal/kafka"
@@ -9,14 +10,16 @@ import (
 )
 
 type Service struct {
-	repo  repository
-	kafka kafka.Producer
+	repo        repository
+	productRepo productRepository
+	kafka       kafka.Producer
 }
 
-func NewService(repo repository, kafka kafka.Producer) *Service {
+func NewService(repo repository, productRepo productRepository, kafka kafka.Producer) *Service {
 	return &Service{
-		repo:  repo,
-		kafka: kafka,
+		repo:        repo,
+		productRepo: productRepo,
+		kafka:       kafka,
 	}
 }
 
@@ -48,22 +51,43 @@ func (s *Service) Create(ctx context.Context, in *dto.CreateCharacteristicReq) (
 		return 0, err
 	}
 
-	err = s.kafka.Write(ctx, []byte("productAPI"))
-	if err != nil {
-		return 0, err
-	}
 	return id, nil
 }
 
-func (s *Service) Update(ctx context.Context, products *models.Characteristic) error {
-	err := s.repo.Update(ctx, products)
+func (s *Service) Update(ctx context.Context, char *models.Characteristic) error {
+	err := s.repo.Update(ctx, char)
 	if err != nil {
 		return err
 	}
-	err = s.kafka.Write(ctx, []byte("productAPI"))
+
+	products, err := s.productRepo.List(ctx, &models.ProductFilters{
+		CharacteristicIDs: []int64{char.ID},
+	})
 	if err != nil {
 		return err
 	}
+
+	ids := make([]int64, 0, len(products))
+	for _, product := range products {
+		ids = append(ids, product.ID)
+	}
+
+	msg := kafka.Msg{
+		Service: "productAPI",
+		Type:    "UPDATE",
+		IDs:     ids,
+	}
+
+	b, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+
+	err = s.kafka.Write(ctx, b)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

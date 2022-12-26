@@ -33,6 +33,25 @@ func (r *Repository) List(ctx context.Context, req *models.ProductFilters) ([]*m
 	return res, nil
 }
 
+func (r *Repository) BrandList(ctx context.Context) ([]string, error) {
+	qb := db.PgQb().
+		Select("brand").
+		From(models.ProductTableName).
+		GroupBy("brand").
+		OrderBy("brand")
+
+	// todo: ебучее говно
+	var res []*models.Product
+	err := r.Selectx(ctx, &res, qb)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return []string{"todo"}, nil
+}
+
 func applyFilter(req *models.ProductFilters) squirrel.SelectBuilder {
 	qb := db.PgQb().
 		Select(
@@ -47,6 +66,9 @@ func applyFilter(req *models.ProductFilters) squirrel.SelectBuilder {
 		From(fmt.Sprintf("%s AS p", models.ProductTableName)).
 		LeftJoin(fmt.Sprintf("%v pc on p.id = pc.product_id", models.ProductCharacteristicTableName))
 	if req != nil {
+		if len(req.IDs) > 0 {
+			qb = qb.Where(squirrel.Eq{"p.id": req.IDs})
+		}
 		if len(req.CategoryIDs) > 0 {
 			qb = qb.Where(squirrel.Eq{"p.category_id": req.CategoryIDs})
 		}
@@ -55,6 +77,9 @@ func applyFilter(req *models.ProductFilters) squirrel.SelectBuilder {
 		}
 		if len(req.ProductCharacteristicIDs) > 0 {
 			qb = qb.Where(squirrel.Eq{"pc.id": req.ProductCharacteristicIDs})
+		}
+		if len(req.ProductCharacteristicIDs) > 0 {
+			qb = qb.Where(squirrel.Eq{"pc.characteristic_id": req.ProductCharacteristicIDs})
 		}
 	}
 	qb = qb.OrderBy("id")
@@ -126,6 +151,9 @@ func (r *Repository) Delete(ctx context.Context, id int64) error {
 
 	_, err := r.Execx(ctx, qb)
 	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil
+		}
 		return err
 	}
 	return err

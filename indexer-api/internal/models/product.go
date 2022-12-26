@@ -1,6 +1,12 @@
 package models
 
+const ProductTableName = "product"
+
 type (
+	ProductFilters struct {
+		IDs []int64 `json:"ids,omitempty"`
+	}
+
 	ProductInfo struct {
 		ID          int64  `json:"id,omitempty"`
 		CategoryID  int64  `json:"category_id,omitempty"`

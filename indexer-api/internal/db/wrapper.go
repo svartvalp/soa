@@ -6,7 +6,7 @@ import (
 	"github.com/Masterminds/squirrel"
 	pgx "github.com/jackc/pgx/v4/pgxpool"
 	"github.com/randallmlough/pgxscan"
-	"github.com/soa/search-api/internal/config"
+	"github.com/soa/indexer-api/internal/config"
 )
 
 type (

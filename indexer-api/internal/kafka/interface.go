@@ -2,8 +2,6 @@ package kafka
 
 import (
 	"context"
-
-	"github.com/soa/indexer-api/internal/models"
 )
 
 type (
@@ -12,14 +10,12 @@ type (
 	}
 
 	productService interface {
-		GetNewData(context.Context) ([]models.ProductInfo, error)
+		ProductAPIDeleteIvent(context.Context, []int64) error
+		ProductAPIUpdateIvent(context.Context, []int64) error
+		ProductAPICreateIvent(context.Context, []int64) error
 	}
 
-	searchService interface {
-		SendNewInfo(context.Context, []models.ProductInfo) error
-	}
-
-	handle func(context.Context) error
+	handle func(context.Context, []int64) error
 
 	handleMap map[string]handle
 )

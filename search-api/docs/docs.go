@@ -16,6 +16,21 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/product/index": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/product/list": {
             "post": {
                 "consumes": [
@@ -100,7 +115,24 @@ const docTemplate = `{
             }
         },
         "models.Filter": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string"
+                },
+                "cat_id": {
+                    "type": "integer"
+                },
+                "price_from": {
+                    "type": "integer"
+                },
+                "price_to": {
+                    "type": "integer"
+                },
+                "query": {
+                    "type": "string"
+                }
+            }
         },
         "models.ProductCharacteristic": {
             "type": "object",
@@ -169,7 +201,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:7001",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Product API",
+	Title:            "Search API",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

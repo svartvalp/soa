@@ -2,43 +2,78 @@ package product_service
 
 import (
 	"context"
-	"encoding/json"
-	"io"
-	"net/http"
-
-	"github.com/soa/indexer-api/internal/config"
-	"github.com/soa/indexer-api/internal/models"
 )
 
-type (
-	Service struct {
-		productAPIAddress string
-		productPath       string
-		requester         requester
-	}
-)
+type Service struct {
+	repository repository
+	productAPI productAPI
+	searchAPI  searchAPI
+}
 
-func NewService(cfg *config.Config, req requester) *Service {
+func New(
+	repository repository,
+	productAPI productAPI,
+	searchAPI searchAPI,
+) *Service {
 	return &Service{
-		productAPIAddress: cfg.ProductAPI.Address,
-		productPath:       cfg.ProductAPI.Path,
-		requester:         req,
+		repository: repository,
+		productAPI: productAPI,
+		searchAPI:  searchAPI,
 	}
 }
 
-func (s *Service) GetNewData(ctx context.Context) ([]models.ProductInfo, error) {
-	resp, err := s.requester.DoRequest(ctx, s.productAPIAddress+s.productPath, http.MethodGet, nil)
+func (s *Service) ProductAPIDeleteIvent(ctx context.Context, ids []int64) error {
+	err := s.repository.Delete(ctx, ids)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var info []models.ProductInfo
-	body, err := io.ReadAll(resp.Body)
+
+	repoInfo, err := s.repository.List(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	err = json.Unmarshal(body, &info)
+
+	return s.searchAPI.SendNewInfo(ctx, repoInfo)
+}
+
+func (s *Service) ProductAPIUpdateIvent(ctx context.Context, ids []int64) error {
+	info, err := s.productAPI.GetNewData(ctx, ids)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return info, nil
+
+	err = s.repository.Update(ctx, info[0])
+	if err != nil {
+		return err
+	}
+
+	repoInfo, err := s.repository.List(ctx)
+	if err != nil {
+		return err
+	}
+
+	return s.searchAPI.SendNewInfo(ctx, repoInfo)
+}
+
+func (s *Service) ProductAPICreateIvent(ctx context.Context, ids []int64) error {
+	info, err := s.productAPI.GetNewData(ctx, ids)
+	if err != nil {
+		return err
+	}
+
+	if len(info) != 1 {
+		return nil
+	}
+
+	err = s.repository.Create(ctx, info[0])
+	if err != nil {
+		return err
+	}
+
+	repoInfo, err := s.repository.List(ctx)
+	if err != nil {
+		return err
+	}
+
+	return s.searchAPI.SendNewInfo(ctx, repoInfo)
 }

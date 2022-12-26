@@ -1,0 +1,186 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Catalog API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:7003",
+    "basePath": "/api/v1",
+    "paths": {
+        "/catalog/brand/list": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/catalog/category/list": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Category"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/catalog/product/list": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "description": "List product filters",
+                        "name": "filter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Filter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ProductInfo"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Category": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Filter": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string"
+                },
+                "cat_id": {
+                    "type": "integer"
+                },
+                "price_from": {
+                    "type": "integer"
+                },
+                "price_to": {
+                    "type": "integer"
+                },
+                "query": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProductCharacteristic": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "chType": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ProductInfo": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "categorys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Category"
+                    }
+                },
+                "characteristics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProductCharacteristic"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

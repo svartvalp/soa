@@ -1,13 +1,28 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Product API",
+        "title": "Search API",
         "contact": {},
         "version": "1.0"
     },
     "host": "localhost:7001",
     "basePath": "/api/v1",
     "paths": {
+        "/product/index": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/product/list": {
             "post": {
                 "consumes": [
@@ -92,7 +107,24 @@
             }
         },
         "models.Filter": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string"
+                },
+                "cat_id": {
+                    "type": "integer"
+                },
+                "price_from": {
+                    "type": "integer"
+                },
+                "price_to": {
+                    "type": "integer"
+                },
+                "query": {
+                    "type": "string"
+                }
+            }
         },
         "models.ProductCharacteristic": {
             "type": "object",

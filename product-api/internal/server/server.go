@@ -43,7 +43,7 @@ func (s *server) setHandlers() {
 		}
 	}
 
-	s.gin.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	s.gin.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }
 
 func (s *server) Run() error {
