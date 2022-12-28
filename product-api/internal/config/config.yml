@@ -1,13 +1,13 @@
 server:
   address: ":7002"
-databaseDsn: "user=postgres dbname=product-api password=qwerty host=localhost port=5432 sslmode=disable"
+databaseDsn: "user=postgres dbname=product-api password=qwerty host=db port=5432 sslmode=disable"
 s3:
   bucket: "product-api-bucket"
-  url: "http://localhost:9000"
+  url: "http://ninja:9000"
   region: "us-west-2"
   accessKeyID: "AKIAIOSFODNN7EXAMPLE"
   secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 kafka:
-  address: "localhost:9092"
+  address: "kafka:9092"
   topic: "test"
   partition: 0
