@@ -1,5 +1,5 @@
 kafka:
-  address: "localhost:9092"
+  address: "kafka:9092"
   topic: "test"
   partition: 0
 productAPI:

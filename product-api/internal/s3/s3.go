@@ -23,8 +23,9 @@ func NewS3(cfg *config.Config) (*S3Client, error) {
 	resolver := aws.EndpointResolverWithOptionsFunc(
 		func(service, region string, options ...interface{}) (aws.Endpoint, error) {
 			return aws.Endpoint{
-				URL:           cfg.S3.URL,
-				SigningRegion: cfg.S3.Region,
+				URL:               cfg.S3.URL,
+				SigningRegion:     cfg.S3.Region,
+				HostnameImmutable: true,
 			}, nil
 		},
 	)

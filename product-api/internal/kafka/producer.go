@@ -3,7 +3,7 @@ package kafka
 import (
 	"context"
 
-	"github.com/segmentio/kafka-go"
+	kafka "github.com/segmentio/kafka-go"
 	"github.com/soa/product-api/internal/config"
 )
 
@@ -26,7 +26,7 @@ type (
 
 func NewProducer(cfg *config.Config) Producer {
 	w := &kafka.Writer{
-		Addr:     kafka.TCP("localhost:9092"),
+		Addr:     kafka.TCP(cfg.Kafka.Address),
 		Topic:    cfg.Kafka.Topic,
 		Balancer: &kafka.LeastBytes{},
 	}
