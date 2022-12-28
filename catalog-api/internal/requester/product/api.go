@@ -46,7 +46,7 @@ func (p *ProductAPI) GetProductsInfo(ctx context.Context, ids []int64) ([]models
 		return nil, err
 	}
 
-	resp, err := p.r.DoRequest(ctx, p.address+productInfoURL, http.MethodGet, b)
+	resp, err := p.r.DoRequest(ctx, p.address+productInfoURL, http.MethodPost, b)
 	if err != nil {
 		return nil, err
 	}

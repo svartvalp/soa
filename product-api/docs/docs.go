@@ -258,12 +258,23 @@ const docTemplate = `{
             }
         },
         "/product/full-info": {
-            "get": {
+            "post": {
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "parameters": [
+                    {
+                        "description": "List product filters",
+                        "name": "filter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductFilters"
+                        }
+                    }
                 ],
                 "responses": {
                     "200": {

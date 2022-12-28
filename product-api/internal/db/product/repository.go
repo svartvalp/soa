@@ -40,8 +40,7 @@ func (r *Repository) BrandList(ctx context.Context) ([]string, error) {
 		GroupBy("brand").
 		OrderBy("brand")
 
-	// todo: ебучее говно
-	var res []*models.Product
+	var res []string
 	err := r.Selectx(ctx, &res, qb)
 	if err != nil {
 		if err == pgx.ErrNoRows {
@@ -49,7 +48,7 @@ func (r *Repository) BrandList(ctx context.Context) ([]string, error) {
 		}
 		return nil, err
 	}
-	return []string{"todo"}, nil
+	return res, nil
 }
 
 func applyFilter(req *models.ProductFilters) squirrel.SelectBuilder {

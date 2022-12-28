@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/Masterminds/squirrel"
+	"github.com/georgysavva/scany/pgxscan"
 	"github.com/jackc/pgx/v4"
-	"github.com/randallmlough/pgxscan"
 	"github.com/soa/product-api/internal/config"
 )
 
@@ -34,7 +34,7 @@ func (w *wrapper) Selectx(ctx context.Context, dest interface{}, qb squirrel.Sel
 		return err
 	}
 
-	return pgxscan.NewScanner(rows).Scan(dest)
+	return pgxscan.ScanAll(dest, rows)
 }
 
 func (w *wrapper) Execx(ctx context.Context, qb squirrel.Sqlizer) (int64, error) {

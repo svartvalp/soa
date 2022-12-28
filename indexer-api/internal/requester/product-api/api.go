@@ -37,7 +37,7 @@ func (s *ProductAPI) GetNewData(ctx context.Context, ids []int64) ([]models.Prod
 		return nil, err
 	}
 
-	resp, err := s.requester.DoRequest(ctx, s.productAPIAddress+productInfoListURL, http.MethodGet, b)
+	resp, err := s.requester.DoRequest(ctx, s.productAPIAddress+productInfoListURL, http.MethodPost, b)
 	if err != nil {
 		return nil, err
 	}

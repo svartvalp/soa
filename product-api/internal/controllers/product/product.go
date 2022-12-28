@@ -23,7 +23,7 @@ func (c *Controller) SetV1Handlers(group *gin.RouterGroup) {
 	{
 		g.POST("/list", c.list)
 		g.GET("/brand/list", c.brandList)
-		g.GET("/full-info", c.getFullInfo)
+		g.POST("/full-info", c.getFullInfo)
 		g.POST("/create", c.create)
 		g.PUT("/update", c.update)
 		g.DELETE("/:id/delete", c.delete)
@@ -169,8 +169,9 @@ func (c *Controller) delete(ctx *gin.Context) {
 // @Schemes
 // @Accept  json
 // @Produce json
-// @Success 200 {array} models.FullProductInfo
-// @Router  /product/full-info [get]
+// @Param   filter body    models.ProductFilters true "List product filters"
+// @Success 200    {array} models.FullProductInfo
+// @Router  /product/full-info [post]
 func (c *Controller) getFullInfo(ctx *gin.Context) {
 	req := &models.ProductFilters{}
 	err := ctx.ShouldBindJSON(&req)

@@ -337,9 +337,16 @@ paths:
         "200":
           description: OK
   /product/full-info:
-    get:
+    post:
       consumes:
       - application/json
+      parameters:
+      - description: List product filters
+        in: body
+        name: filter
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductFilters'
       produces:
       - application/json
       responses:
