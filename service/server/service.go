@@ -23,7 +23,7 @@ func NewServer(
 	})
 	g.Use(After)
 	srv := &server{
-		gin:         gin.Default(),
+		gin:         g,
 		address:     address,
 		controllers: controllers,
 	}
@@ -34,6 +34,7 @@ func NewServer(
 }
 
 func After(ctx *gin.Context) {
+	ctx.Next()
 	log := logger.LoggerFromGinContext(ctx)
 	errs := ctx.Errors
 
