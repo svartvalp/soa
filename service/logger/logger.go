@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/gin-gonic/gin"
@@ -30,6 +31,19 @@ func GinContextWithLogger(ctx *gin.Context) *gin.Context {
 
 func LoggerFromGinContext(ctx *gin.Context) *zap.SugaredLogger {
 	if a, ok := ctx.Get(k); ok {
+		if l, ok := a.(*zap.SugaredLogger); ok {
+			return l
+		}
+	}
+	return sugar
+}
+
+func ContextWithLogger(ctx context.Context) context.Context {
+	return context.WithValue(ctx, k, sugar)
+}
+
+func LoggerFromContext(ctx context.Context) *zap.SugaredLogger {
+	if a := ctx.Value(key{}); a != nil {
 		if l, ok := a.(*zap.SugaredLogger); ok {
 			return l
 		}

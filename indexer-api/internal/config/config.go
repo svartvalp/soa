@@ -10,8 +10,11 @@ import (
 // Config struct for webapp config
 type (
 	Config struct {
-		Address string `yaml:"address"`
-		Kafka   struct {
+		Server struct {
+			Host string `yaml:"host"`
+			Port int    `yaml:"port"`
+		} `yaml:"server"`
+		Kafka struct {
 			Address   string `yaml:"address"`
 			Topic     string `yaml:"topic"`
 			Partition int    `yaml:"partition"`
