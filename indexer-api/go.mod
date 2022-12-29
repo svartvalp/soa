@@ -45,7 +45,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/pierrec/lz4/v4 v4.1.15 // indirect
 	github.com/randallmlough/sqlmaper v0.0.0-20191117174101-7ad100a86097 // indirect
-	github.com/svartvalp/soa/service v0.0.2-0.20221229230825-45d0923b0eff // indirect
+	github.com/svartvalp/soa/service v0.0.2-0.20221229231044-db95cf47b1e0 // indirect
 	github.com/swaggo/files v1.0.0 // indirect
 	github.com/swaggo/gin-swagger v1.5.3 // indirect
 	github.com/swaggo/swag v1.8.1 // indirect

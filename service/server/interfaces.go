@@ -11,7 +11,7 @@ type (
 
 	option func(engine *gin.Engine)
 
-	controller interface {
+	Controller interface {
 		SetV1Handlers(group *gin.RouterGroup)
 	}
 )
