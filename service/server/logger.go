@@ -21,10 +21,12 @@ func logAfter(ctx *gin.Context) {
 	log.Infof("%s finish success", ctx.HandlerName())
 }
 
-func WithLogger(g *gin.Engine) {
-	g.Use(func(context *gin.Context) {
-		context = logger.GinContextWithLogger(context)
-	})
-	g.Use(logBefore)
-	g.Use(logAfter)
+func WithLogger() func(g *gin.Engine) {
+	return func(g *gin.Engine) {
+		g.Use(func(context *gin.Context) {
+			context = logger.GinContextWithLogger(context)
+		})
+		g.Use(logBefore)
+		g.Use(logAfter)
+	}
 }

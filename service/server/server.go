@@ -12,13 +12,13 @@ type (
 	server struct {
 		gin         *gin.Engine
 		address     string
-		controllers []controller
+		controllers []Controller
 	}
 
 	Config struct {
 		Host        string
 		Port        int
-		Controllers []controller
+		Controllers []Controller
 	}
 )
 
@@ -29,7 +29,7 @@ func NewServer(
 	g := gin.New()
 
 	for _, o := range options {
-		o(g)
+		o()(g)
 	}
 
 	srv := &server{
