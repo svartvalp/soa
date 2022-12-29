@@ -20,6 +20,13 @@ type Config struct {
 	SearchAPI struct {
 		Address string `yaml:"address"`
 	} `yaml:"searchAPI"`
+	S3 struct {
+		Bucket          string `yaml:"bucket"`
+		URL             string `yaml:"url"`
+		Region          string `yaml:"region"`
+		AccessKeyID     string `yaml:"accessKeyID"`
+		SecretAccessKey string `yaml:"secretAccessKey"`
+	} `yaml:"s3"`
 }
 
 // NewConfig returns a new decoded Config struct

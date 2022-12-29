@@ -23,6 +23,7 @@ func (c *Controller) SetV1Handlers(group *gin.RouterGroup) {
 		g.GET("/brand/list", c.brandList)
 		g.GET("/category/list", c.categoryList)
 		g.POST("/product/list", c.productList)
+		g.GET("/image/:image", c.getImage)
 	}
 }
 
@@ -75,4 +76,22 @@ func (c *Controller) categoryList(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, cats)
+}
+
+// @Schemes
+// @Accept  json
+// @Produce json
+// @Success 200
+// @Router  /catalog/image [get]
+func (c *Controller) getImage(ctx *gin.Context) {
+	name := ctx.Param("image")
+	if name == "" {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, "empty image name")
+	}
+	img, err := c.catalogService.GetImage(ctx, name)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.Data(200, img.ContentType, img.Data)
 }

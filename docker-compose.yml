@@ -45,8 +45,6 @@ services:
     restart: always
     ports:
       - 9444:9000
-    tmpfs:
-      - "/home/sirius/data/product-api-bucket/:uid=2000,gid=2000"
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper

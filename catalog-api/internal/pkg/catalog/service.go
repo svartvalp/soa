@@ -10,6 +10,7 @@ import (
 type Service struct {
 	productAPI productAPI
 	searchAPI  searchAPI
+	s3         s3
 }
 
 func (s *Service) BrandList(ctx context.Context) ([]string, error) {
@@ -34,9 +35,14 @@ func (s *Service) GetProducts(ctx context.Context, req *models.Filter) ([]models
 	return s.productAPI.GetProductsInfo(ctx, ids)
 }
 
-func New(productAPI productAPI, searchAPI searchAPI) *Service {
+func (s *Service) GetImage(ctx context.Context, name string) (*models.Image, error) {
+	return s.s3.GetImage(ctx, name)
+}
+
+func New(productAPI productAPI, searchAPI searchAPI, s3 s3) *Service {
 	return &Service{
 		productAPI: productAPI,
 		searchAPI:  searchAPI,
+		s3:         s3,
 	}
 }

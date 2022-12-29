@@ -11,5 +11,6 @@ type (
 		BrandList(context.Context) ([]string, error)
 		CategoryList(context.Context) ([]models.Category, error)
 		GetProducts(context.Context, *models.Filter) ([]models.ProductInfo, error)
+		GetImage(ctx context.Context, name string) (*models.Image, error)
 	}
 )

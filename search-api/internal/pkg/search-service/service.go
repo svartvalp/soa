@@ -45,11 +45,11 @@ func NewService() (*Service, error) {
 		}
 	}
 	id := strconv.FormatInt(time.Now().UnixNano(), 10)
-	err = old.(bleve.IndexCopyable).CopyTo(bleve.FileSystemDirectory(id))
-	if err != nil {
-		return nil, err
-	}
-	n, err := bleve.Open(id)
+	// err = old.(bleve.IndexCopyable).CopyTo(bleve.FileSystemDirectory(id))
+	// if err != nil {
+	// 	return nil, err
+	// }
+	n, err := bleve.New(id, bleve.NewIndexMapping())
 	alias := bleve.NewIndexAlias(old)
 	return &Service{
 		main: alias,
@@ -179,11 +179,11 @@ func (s *Service) SwapIndex(ctx context.Context) error {
 		return err
 	}
 	id := strconv.FormatInt(time.Now().UnixNano(), 10)
-	err = s.old.(bleve.IndexCopyable).CopyTo(bleve.FileSystemDirectory(id))
-	if err != nil {
-		return err
-	}
-	s.new, err = bleve.Open(id)
+	// err = s.old.(bleve.IndexCopyable).CopyTo(bleve.FileSystemDirectory(id))
+	// if err != nil {
+	// 	return err
+	// }
+	s.new, err = bleve.New(id, bleve.NewIndexMapping())
 	if err != nil {
 		return err
 	}

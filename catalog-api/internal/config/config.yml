@@ -4,3 +4,9 @@ productAPI:
   address: "http://product-api:7002/api/v1/"
 searchAPI:
   address: "http://search-api:7001/api/v1/"
+s3:
+  bucket: "product-api-bucket"
+  url: "http://ninja:9000"
+  region: "us-west-2"
+  accessKeyID: "AKIAIOSFODNN7EXAMPLE"
+  secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"

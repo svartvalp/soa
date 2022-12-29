@@ -96,6 +96,15 @@ paths:
             items:
               $ref: '#/definitions/models.Category'
             type: array
+  /catalog/image:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
   /catalog/product/list:
     post:
       consumes:

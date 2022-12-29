@@ -9,6 +9,7 @@ import (
 	"github.com/soa/catalog-api/internal/requester"
 	product_api "github.com/soa/catalog-api/internal/requester/product"
 	search_api "github.com/soa/catalog-api/internal/requester/search"
+	"github.com/soa/catalog-api/internal/s3"
 	"github.com/soa/catalog-api/internal/server"
 )
 
@@ -24,8 +25,13 @@ func main() {
 	productAPI := product_api.New(requester, cfg)
 	searchAPI := search_api.New(requester, cfg)
 
+	s3Cl, err := s3.NewS3(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Services
-	catalogService := catalog.New(productAPI, searchAPI)
+	catalogService := catalog.New(productAPI, searchAPI, s3Cl)
 
 	// Controllers
 	catalogController := catalog_controller.New(catalogService)

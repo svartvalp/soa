@@ -16,4 +16,8 @@ type (
 	searchAPI interface {
 		GetProductIDs(context.Context, *models.Filter) ([]int64, error)
 	}
+
+	s3 interface {
+		GetImage(ctx context.Context, filename string) (*models.Image, error)
+	}
 )

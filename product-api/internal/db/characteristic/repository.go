@@ -43,7 +43,7 @@ func (r *Repository) ProductCharacteristicList(ctx context.Context) ([]*models.P
 			"pch.product_id",
 		).
 		From(fmt.Sprintf("%s as ch", models.CharacteristicTableName)).
-		LeftJoin(
+		Join(
 			fmt.Sprintf(
 				"%s pch on pch.characteristic_id = ch.id",
 				models.ProductCharacteristicTableName,

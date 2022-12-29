@@ -5,7 +5,7 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/georgysavva/scany/pgxscan"
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/soa/product-api/internal/config"
 )
 
@@ -15,7 +15,7 @@ type (
 		Execx(ctx context.Context, qb squirrel.Sqlizer) (int64, error)
 	}
 	wrapper struct {
-		pg *pgx.Conn
+		pg *pgxpool.Pool
 	}
 )
 
@@ -52,9 +52,9 @@ func (w *wrapper) Execx(ctx context.Context, qb squirrel.Sqlizer) (int64, error)
 }
 
 func NewWrapper(ctx context.Context, cfg *config.Config) (Wrapper, error) {
-	conn, err := pgx.Connect(ctx, cfg.DatabaseDsn)
+	pool, err := pgxpool.Connect(ctx, cfg.DatabaseDsn)
 	if err != nil {
 		return nil, err
 	}
-	return &wrapper{conn}, nil
+	return &wrapper{pool}, nil
 }
