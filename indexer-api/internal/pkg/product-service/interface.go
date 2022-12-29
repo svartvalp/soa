@@ -11,14 +11,14 @@ type (
 		List(ctx context.Context) ([]models.ProductInfo, error)
 		Delete(context.Context, []int64) error
 		Update(context.Context, models.ProductInfo) error
-		Create(context.Context, models.ProductInfo) error
+		Create(context.Context, []models.ProductInfo) error
 	}
 
-	productAPI interface {
+	productClient interface {
 		GetNewData(context.Context, []int64) ([]models.ProductInfo, error)
 	}
 
-	searchAPI interface {
+	searchClient interface {
 		SendNewInfo(context.Context, []models.ProductInfo) error
 	}
 )

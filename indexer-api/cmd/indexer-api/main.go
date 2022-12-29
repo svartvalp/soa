@@ -4,16 +4,23 @@ import (
 	"context"
 	"log"
 
+	_ "github.com/soa/indexer-api/docs"
+	product_api "github.com/soa/indexer-api/internal/client/product"
+	search_api "github.com/soa/indexer-api/internal/client/search"
 	"github.com/soa/indexer-api/internal/config"
+	indexer_controller "github.com/soa/indexer-api/internal/controllers/indexer"
 	"github.com/soa/indexer-api/internal/db"
 	"github.com/soa/indexer-api/internal/db/indexer"
 	"github.com/soa/indexer-api/internal/kafka"
 	product_service "github.com/soa/indexer-api/internal/pkg/product-service"
-	"github.com/soa/indexer-api/internal/requester"
-	product_api "github.com/soa/indexer-api/internal/requester/product-api"
-	search_api "github.com/soa/indexer-api/internal/requester/search-api"
+	"github.com/svartvalp/soa/service/server"
 )
 
+// @title   Indexer API
+// @version 1.0
+
+// @host     localhost:7004
+// @BasePath /api/v1
 func main() {
 	ctx := context.Background()
 
@@ -23,9 +30,8 @@ func main() {
 	}
 
 	// API
-	requester := requester.NewRequester()
-	productAPI := product_api.New(cfg, requester)
-	searchAPI := search_api.New(cfg, requester)
+	productClient := product_api.New(cfg)
+	searchClient := search_api.New(cfg)
 
 	// Repository
 	conn, err := db.NewWrapper(ctx, cfg)
@@ -35,13 +41,23 @@ func main() {
 	repository := indexer.NewRepository(conn)
 
 	// Service
-	productService := product_service.New(repository, productAPI, searchAPI)
+	productService := product_service.New(repository, productClient, searchClient)
 
+	// Controller
+	indexerController := indexer_controller.New(productService)
+
+	// Kafka
 	cons := kafka.NewConsumer(cfg, productService)
 	if err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
 	}
 
-	log.Println("Indexer run")
-	cons.Start(context.Background())
+	go func() {
+		cons.Start(context.Background())
+	}()
+
+	server := server.NewServer(cfg.Address, indexerController)
+	if err = server.Run(); err != nil {
+		log.Fatal(err)
+	}
 }

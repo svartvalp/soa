@@ -39,8 +39,11 @@ func (r Repository) List(ctx context.Context) ([]models.ProductInfo, error) {
 
 func (r Repository) Delete(ctx context.Context, ids []int64) error {
 	qb := db.PgQb().
-		Delete(models.ProductTableName).
-		Where(squirrel.Eq{"id": ids})
+		Delete(models.ProductTableName)
+
+	if len(ids) > 0 {
+		qb = qb.Where(squirrel.Eq{"id": ids})
+	}
 
 	_, err := r.Execx(ctx, qb)
 	if err != nil {
@@ -49,7 +52,7 @@ func (r Repository) Delete(ctx context.Context, ids []int64) error {
 	return nil
 }
 
-func (r Repository) Create(ctx context.Context, info models.ProductInfo) error {
+func (r Repository) Create(ctx context.Context, infos []models.ProductInfo) error {
 	qb := db.PgQb().Insert(models.ProductTableName).Columns(
 		"id",
 		"name",
@@ -61,18 +64,19 @@ func (r Repository) Create(ctx context.Context, info models.ProductInfo) error {
 		"characteristics",
 		"categorys",
 	)
-
-	qb = qb.Values(
-		info.ID,
-		info.Name,
-		info.CategoryID,
-		info.Price,
-		info.Description,
-		info.Brand,
-		info.Image,
-		info.Characteristics,
-		info.Categorys,
-	)
+	for _, info := range infos {
+		qb = qb.Values(
+			info.ID,
+			info.Name,
+			info.CategoryID,
+			info.Price,
+			info.Description,
+			info.Brand,
+			info.Image,
+			info.Characteristics,
+			info.Categorys,
+		)
+	}
 	_, err := r.Execx(ctx, qb)
 	if err != nil {
 		return err

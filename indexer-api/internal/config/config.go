@@ -8,22 +8,45 @@ import (
 )
 
 // Config struct for webapp config
-type Config struct {
-	Kafka struct {
-		Address   string `yaml:"address"`
-		Topic     string `yaml:"topic"`
-		Partition int    `yaml:"partition"`
-	} `yaml:"kafka"`
-
-	ProductAPI struct {
+type (
+	Config struct {
 		Address string `yaml:"address"`
-	} `yaml:"productAPI"`
+		Kafka   struct {
+			Address   string `yaml:"address"`
+			Topic     string `yaml:"topic"`
+			Partition int    `yaml:"partition"`
+		} `yaml:"kafka"`
 
-	SearchAPI struct {
-		Address string `yaml:"address"`
-	} `yaml:"searchAPI"`
+		ProductAPI struct {
+			Address string   `yaml:"address,omitempty"`
+			Handles []Handle `yaml:"handles"`
+		} `yaml:"productAPI"`
 
-	DatabaseDsn string `yaml:"databaseDsn"`
+		SearchAPI struct {
+			Address string   `yaml:"address,omitempty"`
+			Handles []Handle `yaml:"handles" json:"handles,omitempty"`
+		} `yaml:"searchAPI"`
+
+		DatabaseDsn string `yaml:"databaseDsn"`
+	}
+
+	Handle struct {
+		Name   string `yaml:"name"`
+		Method string `yaml:"method,omitempty" ya:"method"`
+		URL    string `yaml:"url,omitempty" ya:"URL"`
+	}
+)
+
+func (h Handle) GetName() string {
+	return h.Name
+}
+
+func (h Handle) GetURL() string {
+	return h.URL
+}
+
+func (h Handle) GetMethod() string {
+	return h.Method
 }
 
 // NewConfig returns a new decoded Config struct

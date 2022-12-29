@@ -1,9 +1,8 @@
 package server
 
 import (
-	// _ "github.com/soa/catalog-api/docs"
-
 	"github.com/gin-gonic/gin"
+	"github.com/svartvalp/soa/service/logger"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -18,6 +17,11 @@ func NewServer(
 	address string,
 	controllers ...controller,
 ) Server {
+	g := gin.New()
+	g.Use(func(context *gin.Context) {
+		context = logger.GinContextWithLogger(context)
+	})
+	g.Use(After)
 	srv := &server{
 		gin:         gin.Default(),
 		address:     address,
@@ -29,11 +33,17 @@ func NewServer(
 	return srv
 }
 
-// @title   Catalog API
-// @version 1.0
+func After(ctx *gin.Context) {
+	log := logger.LoggerFromGinContext(ctx)
+	errs := ctx.Errors
 
-// @host     localhost:7003
-// @BasePath /api/v1
+	if len(errs.Errors()) > 0 {
+		log.Error(errs.Last().Error())
+		return
+	}
+	log.Infof("finish success")
+}
+
 func (s *server) setHandlers() {
 	v1 := s.gin.Group("/api/v1")
 	{

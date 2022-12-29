@@ -1,0 +1,17 @@
+basePath: /api/v1
+host: localhost:7004
+info:
+  contact: {}
+  title: Indexer API
+  version: "1.0"
+paths:
+  /indexer/regenerate:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+swagger: "2.0"

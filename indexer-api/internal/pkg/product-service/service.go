@@ -6,20 +6,34 @@ import (
 
 type Service struct {
 	repository repository
-	productAPI productAPI
-	searchAPI  searchAPI
+	productAPI productClient
+	searchAPI  searchClient
 }
 
 func New(
 	repository repository,
-	productAPI productAPI,
-	searchAPI searchAPI,
+	productClient productClient,
+	searchClient searchClient,
 ) *Service {
 	return &Service{
 		repository: repository,
-		productAPI: productAPI,
-		searchAPI:  searchAPI,
+		productAPI: productClient,
+		searchAPI:  searchClient,
 	}
+}
+
+func (s *Service) Regenerate(ctx context.Context) error {
+	err := s.repository.Delete(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	info, err := s.productAPI.GetNewData(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	return s.repository.Create(ctx, info)
 }
 
 func (s *Service) ProductAPIDeleteIvent(ctx context.Context, ids []int64) error {
@@ -65,7 +79,7 @@ func (s *Service) ProductAPICreateIvent(ctx context.Context, ids []int64) error 
 		return nil
 	}
 
-	err = s.repository.Create(ctx, info[0])
+	err = s.repository.Create(ctx, info)
 	if err != nil {
 		return err
 	}
