@@ -1,4 +1,4 @@
-module github.com/svartvalp/soa/service
+module github.com/soa/service
 
 go 1.19
 
