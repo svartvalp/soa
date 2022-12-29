@@ -219,6 +219,8 @@ github.com/svartvalp/soa/service v0.0.2-0.20221229222648-9732ea0b2772 h1:mUHYh1r
 github.com/svartvalp/soa/service v0.0.2-0.20221229222648-9732ea0b2772/go.mod h1:eoklF3XpX8Ehn3tjmuicz1He7ftZwBcym9inW3bzNqE=
 github.com/svartvalp/soa/service v0.0.2-0.20221229224134-5aa0d717e0f2 h1:ykPWdlEkq3UAxA/5YOVDlNnKLPGJn1OX/eMTRu8zfeg=
 github.com/svartvalp/soa/service v0.0.2-0.20221229224134-5aa0d717e0f2/go.mod h1:eoklF3XpX8Ehn3tjmuicz1He7ftZwBcym9inW3bzNqE=
+github.com/svartvalp/soa/service v0.0.2-0.20221229224738-d8ec3d8a4412 h1:pzCGWjhlar+NVwQcYHkYwo4Xpb/cNX6uXh4II46uiiw=
+github.com/svartvalp/soa/service v0.0.2-0.20221229224738-d8ec3d8a4412/go.mod h1:eoklF3XpX8Ehn3tjmuicz1He7ftZwBcym9inW3bzNqE=
 github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a/go.mod h1:lKJPbtWzJ9JhsTN1k1gZgleJWY/cqq0psdoMmaThG3w=
 github.com/swaggo/files v1.0.0 h1:1gGXVIeUFCS/dta17rnP0iOpr6CXFwKD7EO5ID233e4=
 github.com/swaggo/files v1.0.0/go.mod h1:N59U6URJLyU1PQgFqPM7wXLMhJx7QAolnvfQkqO13kc=

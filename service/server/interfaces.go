@@ -9,6 +9,8 @@ type (
 		Run() error
 	}
 
+	option func(engine *gin.Engine)
+
 	controller interface {
 		SetV1Handlers(group *gin.RouterGroup)
 	}
