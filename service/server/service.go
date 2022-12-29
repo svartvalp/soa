@@ -1,6 +1,8 @@
 package server
 
 import (
+	"runtime"
+
 	"github.com/gin-gonic/gin"
 	"github.com/svartvalp/soa/service/logger"
 	swaggerfiles "github.com/swaggo/files"
@@ -21,7 +23,7 @@ func NewServer(
 	g.Use(func(context *gin.Context) {
 		context = logger.GinContextWithLogger(context)
 	})
-	g.Use(After)
+	g.Use(LogAfter)
 	srv := &server{
 		gin:         g,
 		address:     address,
@@ -33,16 +35,25 @@ func NewServer(
 	return srv
 }
 
-func After(ctx *gin.Context) {
+func LogBefore(ctx *gin.Context) {
+	pc, _, _, _ := runtime.Caller(3)
+	name := runtime.FuncForPC(pc).Name()
+	log := logger.LoggerFromGinContext(ctx)
+	log.Infof("%s start", name)
+}
+
+func LogAfter(ctx *gin.Context) {
 	ctx.Next()
+	pc, _, _, _ := runtime.Caller(3)
+	name := runtime.FuncForPC(pc).Name()
 	log := logger.LoggerFromGinContext(ctx)
 	errs := ctx.Errors
 
 	if len(errs.Errors()) > 0 {
-		log.Error(errs.Last().Error())
+		log.Errorf("%s finish with err: %v", name, errs.Last().Error())
 		return
 	}
-	log.Infof("finish success")
+	log.Infof("%s finish success", name)
 }
 
 func (s *server) setHandlers() {
