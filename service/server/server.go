@@ -18,7 +18,7 @@ type (
 	Config struct {
 		Host        string
 		Port        int
-		controllers []controller
+		Controllers []controller
 	}
 )
 
@@ -35,7 +35,7 @@ func NewServer(
 	srv := &server{
 		gin:         g,
 		address:     fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
-		controllers: cfg.controllers,
+		controllers: cfg.Controllers,
 	}
 
 	srv.setHandlers()
