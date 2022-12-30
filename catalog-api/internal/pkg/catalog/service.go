@@ -2,14 +2,13 @@ package catalog
 
 import (
 	"context"
-	"log"
 
 	"github.com/soa/catalog-api/internal/models"
 )
 
 type Service struct {
-	productAPI productAPI
-	searchAPI  searchAPI
+	productAPI productClient
+	searchAPI  searchClient
 	s3         s3
 }
 
@@ -24,7 +23,6 @@ func (s *Service) CategoryList(ctx context.Context) ([]models.Category, error) {
 func (s *Service) GetProducts(ctx context.Context, req *models.Filter) ([]models.ProductInfo, error) {
 	ids, err := s.searchAPI.GetProductIDs(ctx, req)
 	if err != nil {
-		log.Printf("GetProducts: %v", err)
 		return nil, err
 	}
 
@@ -39,7 +37,7 @@ func (s *Service) GetImage(ctx context.Context, name string) (*models.Image, err
 	return s.s3.GetImage(ctx, name)
 }
 
-func New(productAPI productAPI, searchAPI searchAPI, s3 s3) *Service {
+func New(productAPI productClient, searchAPI searchClient, s3 s3) *Service {
 	return &Service{
 		productAPI: productAPI,
 		searchAPI:  searchAPI,

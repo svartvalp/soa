@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/segmentio/kafka-go"
 	"github.com/soa/indexer-api/internal/config"
+	"github.com/svartvalp/soa/service/logger"
 )
 
 type (
@@ -25,22 +25,26 @@ type (
 )
 
 func (c *consumer) Start(ctx context.Context) {
+	log := logger.LoggerFromContext(ctx)
 	for {
 		m, err := c.reader.ReadMessage(ctx)
 		if err != nil {
-			log.Println(err)
+			log.Error(err)
 			continue
 		}
 
 		var msg msg
 		err = json.Unmarshal(m.Value, &msg)
 		if err != nil {
-			log.Println(err)
+			log.Error(err)
 			continue
 		}
 
 		if handle, ok := c.handleMap[fmt.Sprintf("%s-%s", msg.Service, msg.Type)]; ok {
-			log.Println(handle(ctx, msg.IDs))
+			err = handle(ctx, msg.IDs)
+			if err != nil {
+				log.Error(err)
+			}
 		}
 	}
 }

@@ -7,26 +7,50 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// Config struct for webapp config
-type Config struct {
-	Server struct {
-		Address string `yaml:"address"`
-	} `yaml:"server"`
+type (
+	// Config struct for webapp config
+	Config struct {
+		Server struct {
+			Host string `yaml:"host"`
+			Port int    `yaml:"port"`
+		} `yaml:"server"`
 
-	ProductAPI struct {
-		Address string `yaml:"address"`
-	} `yaml:"productAPI"`
+		ProductAPI struct {
+			Address string   `yaml:"address"`
+			Handles []Handle `yaml:"handles"`
+		} `yaml:"productAPI"`
 
-	SearchAPI struct {
-		Address string `yaml:"address"`
-	} `yaml:"searchAPI"`
-	S3 struct {
-		Bucket          string `yaml:"bucket"`
-		URL             string `yaml:"url"`
-		Region          string `yaml:"region"`
-		AccessKeyID     string `yaml:"accessKeyID"`
-		SecretAccessKey string `yaml:"secretAccessKey"`
-	} `yaml:"s3"`
+		SearchAPI struct {
+			Address string   `yaml:"address"`
+			Handles []Handle `yaml:"handles"`
+		} `yaml:"searchAPI"`
+
+		S3 struct {
+			Bucket          string `yaml:"bucket"`
+			URL             string `yaml:"url"`
+			Region          string `yaml:"region"`
+			AccessKeyID     string `yaml:"accessKeyID"`
+			SecretAccessKey string `yaml:"secretAccessKey"`
+		} `yaml:"s3"`
+	}
+
+	Handle struct {
+		Name   string `yaml:"name"`
+		Method string `yaml:"method,omitempty" ya:"method"`
+		URL    string `yaml:"url,omitempty" ya:"URL"`
+	}
+)
+
+func (h Handle) GetName() string {
+	return h.Name
+}
+
+func (h Handle) GetURL() string {
+	return h.URL
+}
+
+func (h Handle) GetMethod() string {
+	return h.Method
 }
 
 // NewConfig returns a new decoded Config struct

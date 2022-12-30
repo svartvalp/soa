@@ -29,7 +29,7 @@ func (c *Controller) SetV1Handlers(group *gin.RouterGroup) {
 func (c *Controller) regenerate(ctx *gin.Context) {
 	err := c.indexerService.Regenerate(ctx)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 	ctx.Status(http.StatusOK)

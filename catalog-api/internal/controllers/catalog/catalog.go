@@ -82,11 +82,12 @@ func (c *Controller) categoryList(ctx *gin.Context) {
 // @Accept  json
 // @Produce json
 // @Success 200
-// @Router  /catalog/image [get]
+// @Router  /catalog/image/{image} [get]
 func (c *Controller) getImage(ctx *gin.Context) {
 	name := ctx.Param("image")
 	if name == "" {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, "empty image name")
+		return
 	}
 	img, err := c.catalogService.GetImage(ctx, name)
 	if err != nil {

@@ -50,7 +50,7 @@
                 }
             }
         },
-        "/catalog/image": {
+        "/catalog/image/{image}": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -60,7 +60,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": ""
+                        "description": "OK"
                     }
                 }
             }

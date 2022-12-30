@@ -1,9 +1,24 @@
 server:
-  address: ":7003"
+  host: "localhost"
+  port: 7003
 productAPI:
   address: "http://product-api:7002/api/v1/"
+  handles:
+    - name: "full info"
+      url: "/product/full-info"
+      method: "POST"
+    - name: "product list"
+      url: "product/brand/list"
+      method: "GET"
+    - name: "category list"
+      url: "category/list"
+      method: "GET"
 searchAPI:
   address: "http://search-api:7001/api/v1/"
+  handles:
+    - name: "product ids"
+      url: "product/list"
+      method: "POST"
 s3:
   bucket: "product-api-bucket"
   url: "http://ninja:9000"

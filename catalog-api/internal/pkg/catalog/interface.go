@@ -7,13 +7,13 @@ import (
 )
 
 type (
-	productAPI interface {
+	productClient interface {
 		BrandList(context.Context) ([]string, error)
 		CategoriesList(context.Context) ([]models.Category, error)
 		GetProductsInfo(context.Context, []int64) ([]models.ProductInfo, error)
 	}
 
-	searchAPI interface {
+	searchClient interface {
 		GetProductIDs(context.Context, *models.Filter) ([]int64, error)
 	}
 

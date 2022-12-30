@@ -33,7 +33,12 @@ func (s *Service) Regenerate(ctx context.Context) error {
 		return err
 	}
 
-	return s.repository.Create(ctx, info)
+	err = s.repository.Create(ctx, info)
+	if err != nil {
+		return err
+	}
+
+	return s.searchAPI.SendNewInfo(ctx, info)
 }
 
 func (s *Service) ProductAPIDeleteIvent(ctx context.Context, ids []int64) error {
