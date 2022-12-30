@@ -5,14 +5,15 @@ import (
 	"log"
 
 	_ "github.com/soa/indexer-api/docs"
-	product_api "github.com/soa/indexer-api/internal/client/product"
-	search_api "github.com/soa/indexer-api/internal/client/search"
+	product_api "github.com/soa/indexer-api/internal/clients/product"
+	search_api "github.com/soa/indexer-api/internal/clients/search"
 	"github.com/soa/indexer-api/internal/config"
 	indexer_controller "github.com/soa/indexer-api/internal/controllers/indexer"
 	"github.com/soa/indexer-api/internal/db"
 	"github.com/soa/indexer-api/internal/db/indexer"
 	"github.com/soa/indexer-api/internal/kafka"
 	product_service "github.com/soa/indexer-api/internal/pkg/product-service"
+	"github.com/svartvalp/soa/service/logger"
 	"github.com/svartvalp/soa/service/server"
 )
 
@@ -22,7 +23,7 @@ import (
 // @host     localhost:7004
 // @BasePath /api/v1
 func main() {
-	ctx := context.Background()
+	ctx := logger.ContextWithLogger(context.Background())
 
 	cfg, err := config.NewConfig("internal/config/config.yml")
 	if err != nil {
@@ -53,10 +54,16 @@ func main() {
 	}
 
 	go func() {
-		cons.Start(context.Background())
+		cons.Start(ctx)
 	}()
 
-	server := server.NewServer(cfg.Address, indexerController)
+	server := server.NewServer(&server.Config{
+		Host:        cfg.Server.Host,
+		Port:        cfg.Server.Port,
+		Controllers: []server.Controller{indexerController},
+	},
+		server.WithLogger,
+	)
 	if err = server.Run(); err != nil {
 		log.Fatal(err)
 	}

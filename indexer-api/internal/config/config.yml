@@ -3,7 +3,21 @@ kafka:
   topic: "test"
   partition: 0
 productAPI:
-  address: "http://product-api:7002/api/v1/"
+  address: "http://product-api:7002/api/v1"
+  handles:
+    - name: "full info"
+      url: "/product/full-info"
+      method: "POST"
 searchAPI:
-  address: "http://search-api:7001/api/v1/"
-databaseDsn: "user=postgres dbname=indexer-api password=qwerty host=db port=5432 sslmode=disable"
+  address: "http://search-api:7001/api/v1"
+  handles:
+    - name: "update product"
+      url: "/product/update"
+      method: "PUT"
+    - name: "commit index"
+      url: "/product/index"
+      method: "POST"
+databaseDsn: "user=postgres dbname=indexer-api password=qwerty host=localhost port=5432 sslmode=disable"
+server:
+  host: "localhost"
+  port: 7004
