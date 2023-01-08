@@ -23,7 +23,7 @@ services:
     container_name: catalog-api
     build: ./catalog-api
     ports:
-      - 7003:7003
+      - "7003:7003"
     depends_on:
       - product-api
       - search-api
@@ -31,7 +31,7 @@ services:
     container_name: indexer-api
     build: ./indexer-api
     ports:
-      - 8082:8082
+      - "7004:7004"
     depends_on:
       - db
       - kafka
@@ -39,7 +39,7 @@ services:
     container_name: product-api
     build: ./product-api
     ports:
-      - 7002:7002
+      - "7002:7002"
     depends_on:
       - db
       - kafka
@@ -48,7 +48,7 @@ services:
     container_name: search-api
     build: ./search-api
     ports:
-      - 7001:7001
+      - "7001:7001"
   db:
     container_name: postgres
     image: postgres
@@ -56,13 +56,13 @@ services:
     environment:
       POSTGRES_PASSWORD: qwerty
     ports:
-      - 5432:5432
+      - "5432:5432"
   ninja:
     container_name: ninja
     image: scireum/s3-ninja:8.1.0
     restart: always
     ports:
-      - 9444:9000
+      - "9444:9000"
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper

@@ -11,5 +11,5 @@ scrape_configs:
         - targets:
             - catalog-api:7003
             - product-api:7002
-            - indexer-api:8082
+            - indexer-api:7004
             - search-api:7001
