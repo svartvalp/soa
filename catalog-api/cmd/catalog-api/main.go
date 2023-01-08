@@ -42,11 +42,15 @@ func main() {
 	// Controllers
 	catalogController := catalog_controller.New(catalogService)
 
-	srv := server.NewServer(&server.Config{
-		Host:        cfg.Server.Host,
-		Port:        cfg.Server.Port,
-		Controllers: []server.Controller{catalogController},
-	}, server.WithLogger)
+	srv := server.NewServer(
+		&server.Config{
+			Host:        cfg.Server.Host,
+			Port:        cfg.Server.Port,
+			Controllers: []server.Controller{catalogController},
+		},
+		server.WithLogger,
+		server.WithMetrics,
+	)
 
 	if err = srv.Run(); err != nil {
 		log.Fatal(err)

@@ -17,7 +17,7 @@ searchAPI:
     - name: "commit index"
       url: "/product/index"
       method: "POST"
-databaseDsn: "user=postgres dbname=indexer-api password=qwerty host=localhost port=5432 sslmode=disable"
+databaseDsn: "user=postgres dbname=indexer-api password=qwerty host=postgres port=5432 sslmode=disable"
 server:
-  host: "localhost"
+  host: ""
   port: 7004

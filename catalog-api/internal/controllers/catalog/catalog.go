@@ -1,6 +1,7 @@
 package catalog
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -35,6 +36,7 @@ func (c *Controller) SetV1Handlers(group *gin.RouterGroup) {
 func (c *Controller) brandList(ctx *gin.Context) {
 	brands, err := c.catalogService.BrandList(ctx)
 	if err != nil {
+		ctx.Error(err)
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -51,12 +53,14 @@ func (c *Controller) productList(ctx *gin.Context) {
 	var filter models.Filter
 	err := ctx.ShouldBindJSON(&filter)
 	if err != nil {
+		ctx.Error(err)
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, err)
 		return
 	}
 
 	products, err := c.catalogService.GetProducts(ctx, &filter)
 	if err != nil {
+		ctx.Error(err)
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -71,6 +75,7 @@ func (c *Controller) productList(ctx *gin.Context) {
 func (c *Controller) categoryList(ctx *gin.Context) {
 	cats, err := c.catalogService.CategoryList(ctx)
 	if err != nil {
+		ctx.Error(err)
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -86,11 +91,13 @@ func (c *Controller) categoryList(ctx *gin.Context) {
 func (c *Controller) getImage(ctx *gin.Context) {
 	name := ctx.Param("image")
 	if name == "" {
+		ctx.Error(errors.New("empty image name"))
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, "empty image name")
 		return
 	}
 	img, err := c.catalogService.GetImage(ctx, name)
 	if err != nil {
+		ctx.Error(err)
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
 		return
 	}

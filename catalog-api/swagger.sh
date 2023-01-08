@@ -1,2 +1,2 @@
 swag fmt
-swag init -g server.go -d ./internal/server/,./internal/controllers/catalog,./internal/models
+swag init -g main.go -d ./cmd/catalog-api,./internal/controllers/catalog,./internal/models

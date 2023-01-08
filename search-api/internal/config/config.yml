@@ -1,4 +1,4 @@
 server:
-  host: "localhost"
+  host: ""
   port: 7001
 databaseDsn: "user=postgres dbname=search-api password=qwerty host=localhost port=5432 sslmode=disable"

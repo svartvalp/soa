@@ -1,0 +1,15 @@
+global:
+  scrape_interval:     1s
+  evaluation_interval: 1s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: "services"
+    static_configs:
+        - targets:
+            - catalog-api:7003
+            - product-api:7002
+            - indexer-api:8082
+            - search-api:7001

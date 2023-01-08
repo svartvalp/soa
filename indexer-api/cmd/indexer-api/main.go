@@ -57,12 +57,14 @@ func main() {
 		cons.Start(ctx)
 	}()
 
-	srv := server.NewServer(&server.Config{
-		Host:        cfg.Server.Host,
-		Port:        cfg.Server.Port,
-		Controllers: []server.Controller{indexerController},
-	},
+	srv := server.NewServer(
+		&server.Config{
+			Host:        cfg.Server.Host,
+			Port:        cfg.Server.Port,
+			Controllers: []server.Controller{indexerController},
+		},
 		server.WithLogger,
+		server.WithMetrics,
 	)
 	if err = srv.Run(); err != nil {
 		log.Fatal(err)

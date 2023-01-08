@@ -74,6 +74,7 @@ func main() {
 			},
 		},
 		server.WithLogger,
+		server.WithMetrics,
 	)
 
 	if err = srv.Run(); err != nil {
