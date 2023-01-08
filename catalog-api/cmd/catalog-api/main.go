@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 
+	_ "github.com/soa/catalog-api/docs"
 	product_client "github.com/soa/catalog-api/internal/clients/product"
 	search_client "github.com/soa/catalog-api/internal/clients/search"
 	"github.com/soa/catalog-api/internal/config"

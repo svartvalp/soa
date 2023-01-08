@@ -5,6 +5,7 @@ import (
 
 	log "github.com/svartvalp/soa/service/logger"
 
+	_ "github.com/soa/search-api/docs"
 	"github.com/soa/search-api/internal/config"
 	"github.com/soa/search-api/internal/controllers/search"
 	search_service "github.com/soa/search-api/internal/pkg/search-service"

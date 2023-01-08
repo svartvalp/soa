@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 
+	_ "github.com/soa/product-api/docs"
 	"github.com/soa/product-api/internal/config"
 	"github.com/soa/product-api/internal/controllers/category"
 	"github.com/soa/product-api/internal/controllers/characteristic"
