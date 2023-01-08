@@ -11,7 +11,7 @@ require (
 	github.com/gin-gonic/gin v1.8.2
 	github.com/jackc/pgx/v4 v4.17.2
 	github.com/segmentio/kafka-go v0.4.38
-	github.com/svartvalp/soa/service v0.0.2-0.20230108060333-2fdf5f28326e
+	github.com/svartvalp/soa/service v0.0.2-0.20230108125045-c628e4344771
 	github.com/swaggo/files v1.0.0
 	github.com/swaggo/gin-swagger v1.5.3
 	github.com/swaggo/swag v1.8.7

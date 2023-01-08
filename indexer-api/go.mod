@@ -53,7 +53,7 @@ require (
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/randallmlough/sqlmaper v0.0.0-20191117174101-7ad100a86097 // indirect
-	github.com/svartvalp/soa/service v0.0.2-0.20230108060333-2fdf5f28326e // indirect
+	github.com/svartvalp/soa/service v0.0.2-0.20230108125045-c628e4344771 // indirect
 	github.com/swaggo/files v1.0.0 // indirect
 	github.com/swaggo/gin-swagger v1.5.3 // indirect
 	github.com/swaggo/swag v1.8.1 // indirect
