@@ -5,7 +5,7 @@ productAPI:
   address: "http://product-api:7002/api/v1/"
   handles:
     - name: "full info"
-      url: "/product/full-info"
+      url: "product/full-info"
       method: "POST"
     - name: "product list"
       url: "product/brand/list"
