@@ -2,6 +2,7 @@ package server
 
 import (
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,9 @@ func WithLogger() func(g *gin.Engine) {
 			context = logger.GinContextWithLogger(context)
 		})
 		g.Use(func(ctx *gin.Context) {
+			if notApi(ctx) {
+				return
+			}
 			log := logger.LoggerFromGinContext(ctx)
 			log.Infof("%s start", ctx.HandlerName())
 			ctx.Next()
@@ -36,6 +40,9 @@ func WithMetrics() func(g *gin.Engine) {
 			h.ServeHTTP(ctx.Writer, ctx.Request)
 		})
 		g.Use(func(ctx *gin.Context) {
+			if notApi(ctx) {
+				return
+			}
 			now := time.Now()
 			ctx.Next()
 			duration := time.Since(now)
@@ -46,4 +53,8 @@ func WithMetrics() func(g *gin.Engine) {
 			).Observe(duration.Seconds())
 		})
 	}
+}
+
+func notApi(ctx *gin.Context) bool {
+	return strings.Contains(ctx.FullPath(), "metrics") || strings.Contains(ctx.FullPath(), "docs")
 }
