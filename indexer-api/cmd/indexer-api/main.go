@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 
 	_ "github.com/soa/indexer-api/docs"
 	product_api "github.com/soa/indexer-api/internal/clients/product"
@@ -24,6 +23,7 @@ import (
 // @BasePath /api/v1
 func main() {
 	ctx := logger.ContextWithLogger(context.Background())
+	log := logger.LoggerFromContext(ctx)
 
 	cfg, err := config.NewConfig("internal/config/config.yml")
 	if err != nil {
@@ -57,14 +57,14 @@ func main() {
 		cons.Start(ctx)
 	}()
 
-	server := server.NewServer(&server.Config{
+	srv := server.NewServer(&server.Config{
 		Host:        cfg.Server.Host,
 		Port:        cfg.Server.Port,
 		Controllers: []server.Controller{indexerController},
 	},
 		server.WithLogger,
 	)
-	if err = server.Run(); err != nil {
+	if err = srv.Run(); err != nil {
 		log.Fatal(err)
 	}
 }

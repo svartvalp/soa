@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 
 	"github.com/soa/product-api/internal/config"
 	"github.com/soa/product-api/internal/controllers/category"
@@ -17,11 +16,18 @@ import (
 	characteristic_service "github.com/soa/product-api/internal/pkg/characteristic-service"
 	product_service "github.com/soa/product-api/internal/pkg/product-service"
 	"github.com/soa/product-api/internal/s3"
-	"github.com/soa/product-api/internal/server"
+	"github.com/svartvalp/soa/service/logger"
+	"github.com/svartvalp/soa/service/server"
 )
 
+// @title   Product API
+// @version 1.0
+
+// @host     localhost:7002
+// @BasePath /api/v1
 func main() {
 	ctx := context.Background()
+	log := logger.LoggerFromContext(ctx)
 
 	// Config
 	cfg, err := config.NewConfig("internal/config/config.yml")
@@ -58,10 +64,16 @@ func main() {
 
 	// Run server
 	srv := server.NewServer(
-		cfg,
-		productController,
-		categoryController,
-		characteristicController,
+		&server.Config{
+			Host: cfg.Server.Host,
+			Port: cfg.Server.Port,
+			Controllers: []server.Controller{
+				productController,
+				categoryController,
+				characteristicController,
+			},
+		},
+		server.WithLogger,
 	)
 
 	if err = srv.Run(); err != nil {

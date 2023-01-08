@@ -1,4 +1,4 @@
 swag fmt
-swag init -g server.go -d ./internal/server/,./internal/controllers/search/,./internal/models
+swag init -g main.go -d ./cmd/search-api/,./internal/controllers/search/,./internal/models
 
 

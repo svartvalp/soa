@@ -10,7 +10,8 @@ import (
 // Config struct for webapp config
 type Config struct {
 	Server struct {
-		Address string `yaml:"address"`
+		Host string `yaml:"host"`
+		Port int    `yaml:"port"`
 	} `yaml:"server"`
 
 	DatabaseDsn string `yaml:"databaseDsn"`

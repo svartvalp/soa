@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"context"
 
 	product_client "github.com/soa/catalog-api/internal/clients/product"
 	search_client "github.com/soa/catalog-api/internal/clients/search"
@@ -9,6 +9,7 @@ import (
 	catalog_controller "github.com/soa/catalog-api/internal/controllers/catalog"
 	"github.com/soa/catalog-api/internal/pkg/catalog"
 	"github.com/soa/catalog-api/internal/s3"
+	"github.com/svartvalp/soa/service/logger"
 	"github.com/svartvalp/soa/service/server"
 )
 
@@ -18,6 +19,9 @@ import (
 // @host     localhost:7003
 // @BasePath /api/v1
 func main() {
+	ctx := context.Background()
+	log := logger.LoggerFromContext(ctx)
+
 	cfg, err := config.NewConfig("internal/config/config.yml")
 	if err != nil {
 		log.Fatal(err)
