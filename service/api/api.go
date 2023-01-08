@@ -71,6 +71,9 @@ func UnmarshalBody[StructType any](resp *http.Response) (StructType, error) {
 
 	var out StructType
 	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return out, err
+	}
 
 	err = json.Unmarshal(body, &out)
 
